@@ -105,7 +105,7 @@ function updateGame() {
 
     roachSeed = Math.random() * 2*Math.pi;
   
-    io.sockets.emit('roach', {pos : roachPos, seed : roachSeed, angle : roachAngle, player : oneOrTwo});
+    io.sockets.emit('roach', {x : roachPos[0], y : roachPos[1], seed : roachSeed, angle : roachAngle, player : oneOrTwo});
   }
 
 }
