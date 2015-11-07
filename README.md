@@ -8,12 +8,14 @@ because it is rather stupid
 
 ## TODO
 
-- The cockroaches: animations and random walk
+- The cockroaches:
+  - animations, done
+  - random walk
 - Game start and end
 - Different colors for different players
 - Scoring: controlled area, number of killed cockroaches, what else? style
   points?
-- Prettier splats
+- Prettier splats (animated)
 - Different types of splats
 - Map gestures to splats - do we need a custom driver for myo?
 - A "crusher hand" cursor
