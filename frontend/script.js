@@ -123,7 +123,7 @@ function startGame(c){
 
       case "RoundSplat":
         splash = new RoundSplat(json.data);
-        shape = splat.createBezierDefault(json.data.color, json.data.coords);
+        shape = splat.createDefaultBezier(json.data.color, json.data.coords);
         break;
     }
 
