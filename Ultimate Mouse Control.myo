@@ -14,6 +14,10 @@ scrolling = 0
 lastScrollTime = 0
 wasActive = false
 
+accmax = 0
+accmin = 0
+accinterval = math.floor((accmax - accmin) / 4);
+
 description = [[  
 Mouse Control Script
 
@@ -31,7 +35,7 @@ link = [[ ]]
 controls = [[  
 Controls:  
  - Move arm to control mouse
- - Fist to left click
+ - Fist to lock mouse pos
  - Fingers spread to right click
  - Wave in scroll down
  - Wave out to scroll up
@@ -77,9 +81,17 @@ function lockMyo(edge)
     myo.lock()
 end
 
+function lockPosition(edge)
+    myo.controlMouse(false)
+end
+
+function freePosition(edge)
+    myo.controlMouse(true)
+end
+
  STANDARD_BINDINGS = {
-    fist            = leftClick,
-    fingersSpread   = rightClick,
+    fist            = lockPosition,
+    fingersSpread   = freePosition,
     waveOut         = scrollUp,
     waveIn          = scrollDown,
     doubleTap       = lockMyo
@@ -137,6 +149,21 @@ function onPeriodic()
         myo.mouseScrollBy(scrolling)
         scrollAcceleration = scrollAcceleration + SCROLL_ACCELERATION_RATE;
     end
+
+    x, y, z = myo.getAccel();
+
+    if (x < accmax) then
+        scale = math.abs(math.floor(x / accinterval));
+        if (scale == 0) then
+          myo.mouse(left, click);
+        else if (scale == 1) then
+          myo.mouse(left, click, shift);
+        else if (scale == 2) then
+          myo.mouse(left, click, control);
+        else if (scale == 3) then
+          myo.mouse(left, click, alt);
+        end
+     end
 
     if (DROPLOCK and myo.isUnlocked() and myo.getPitch() < -1) then
         lockMyo();
