@@ -9,6 +9,7 @@ var splashes = [];
 
 var color; // The color of our splashes
 
+// splat appearance animation
 var animation = {
    initialParameters: function (x, y, scaler) {
       this.x = (1 - scaler) * x;
@@ -69,6 +70,7 @@ function startGame(c){
 
       case "RoundSplat":
         splash = new RoundSplat(json.data);
+        shape = 
         break;
     }
 
