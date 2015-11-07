@@ -4,6 +4,7 @@
       <!--<script src="https://code.createjs.com/createjs-2015.05.21.min.js"></script>-->
       <script src="./jquery.min.js"></script>
       <script src="./createjs-2015.05.21.min.js"></script>
+      <script src="beziersplat.js"></script>
       <script>
 var Simple1DNoise = function() {
     var MAX_VERTICES = 256;
@@ -54,6 +55,18 @@ var Simple1DNoise = function() {
         }
     };
 };
+
+function drawBezierSplat(stage, centerX, centerY, color) {
+   var pos = [centerX, centerY]; // position
+   var r = 40.0; // radius
+   var tipN = 13.0; // amount of points
+   var maxOffset = 3.0; // scales the tips
+
+   var splat = new bezierSplat(pos, r, tipN, maxOffset, false);
+
+   stage.addChild(splat.getShape(color));
+   stage.update();
+}
 
 
 function drawRoundSplat(stage, centerX, centerY, color) {
@@ -122,9 +135,12 @@ function getCanvasCoords(event) {
 
 function canvasClick(stage, event) {
     var coords = getCanvasCoords(event); 
-    console.log(event);
-    console.log(coords);
     drawRoundSplat(stage, coords.x, coords.y, "red");
+}
+
+function canvasRightClick(stage, event) {
+   var coords = getCanvasCoords(event);
+   drawBezierSplat(stage, coords.x, coords.y, "red");
 }
 
 function init() {
@@ -133,7 +149,7 @@ function init() {
   // left click
   gCanvasElement.on("click", function(e) {canvasClick(stage, e)});
   // right click, disable contextmenu, do a click instead
-  gCanvasElement.on("contextmenu", function(e) {canvasClick(stage, e); return false;});
+  gCanvasElement.on("contextmenu", function(e) { canvasRightClick(stage, e); return false; });
 }
       </script>
    </head>
