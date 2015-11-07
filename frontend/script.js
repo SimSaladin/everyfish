@@ -126,14 +126,14 @@ function startGame(c){
     var json = JSON.parse(msg);
     switch(json.type) {
 
-      case "Circle":
-        splash = new Circle(json.data);
-        shape.graphics.beginFill(json.data.color).drawCircle(json.data.coords.x, json.data.coords.y, json.data.radius);
+      case "BezierSplat":
+        splash = new BezierSplat(json.data);
+        shape = splat.createDefaultBezier(json.data.color, json.data.coords);
         break;
 
       case "RoundSplat":
         splash = new RoundSplat(json.data);
-        shape = splat.createDefaultBezier(json.data.color, json.data.coords);
+        shape = splat.createDefaultRound(json.data.color, json.data.coords);
         break;
     }
 
@@ -149,10 +149,12 @@ function startGame(c){
   // testing
   createCockroach(stage, 200,200,110);
   // testing sizes:
-  drawLineSplat(stage, 100, 200, "red", Math.PI, 50);
-  drawLineSplat(stage, 250, 200, "red", Math.PI, 100);
-  drawLineSplat(stage, 400, 200, "red", Math.PI, 200);
-  drawLineSplat(stage, 600, 200, "red", Math.PI, 300);
+  stage.addChild(getLineSplat(100, 200, "red", Math.PI, 50));
+  stage.addChild(getLineSplat(250, 200, "red", Math.PI, 100));
+  stage.addChild(getLineSplat(400, 200, "red", Math.PI, 200));
+  stage.addChild(getLineSplat(600, 200, "red", Math.PI, 300));
+  
+  stage.update();
 }
 
 function endGame(){
@@ -168,10 +170,10 @@ function canvasClick(stage, event) {
 
     switch (event.type) {
        case "click":
-          (new Circle(coords)).add();
+          (new RoundSplat(coords)).add();
           break;
        case "contextmenu":
-          (new RoundSplat(coords)).add();
+          (new BezierSplat(coords)).add();
           break;
     }
 }

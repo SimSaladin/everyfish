@@ -1,5 +1,5 @@
 
-function drawRoundSplat(stage, centerX, centerY, color) {
+function getRoundSplat(centerX, centerY, color) {
   var curve = new createjs.Shape();
   curve.graphics.beginStroke(color);
   curve.graphics.beginFill(color);
@@ -35,15 +35,13 @@ function drawRoundSplat(stage, centerX, centerY, color) {
     curve.graphics.lineTo( x0 + sin(theta) * amplitude, y0 - cos(theta) * amplitude );
   }
 
-  stage.addChild(curve);
-  stage.update();
   return curve;
 }
 function gaussian(x, stdev) {
   return Math.exp(-(x*x/(2*stdev*stdev))) / Math.sqrt(2*Math.PI) * stdev;
 }
 
-function drawLineSplat(stage, startX, startY, color, angle, length) {
+function getLineSplat(startX, startY, color, angle, length) {
   var curve = new createjs.Shape();
   curve.graphics.beginStroke(color);
   curve.graphics.beginFill(color);
@@ -83,9 +81,6 @@ function drawLineSplat(stage, startX, startY, color, angle, length) {
     // inverted y-axis, y grows up
     curve.graphics.lineTo( x0 + sin(theta) * amplitude, y0 - cos(theta) * amplitude );
   }
-
-  stage.addChild(curve);
-  stage.update();
   
   return curve;
 }

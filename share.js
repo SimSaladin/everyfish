@@ -24,6 +24,15 @@ RoundSplat = Class.create(Splash, {
 });
 /* }}} */
 
+/* {{{ Bezier Splat */
+BezierSplat = Class.create(Splash, {
+  initialize: function($super, coords) {
+    this.type = "BezierSplat";
+    $super({ coords: coords });
+  }
+});
+/* }}} */
+
 /* {{{ Circle */
 Circle = Class.create(Splash, {
   initialize: function($super, coords) {
