@@ -38,7 +38,7 @@ function bezierSplat(pos, r,
 
       // calculate tip offset coefficien randomly
       offsets = numeric.random([1,tipNo])[0];
-      offsets = numeric.mul(offsetCoef, offsets);
+      offsets = numeric.add(numeric.mul(offsetCoef / 2.0, offsets), 1.5);
 
       /* calculates initial point positions
        * on a circle of radius radius */
