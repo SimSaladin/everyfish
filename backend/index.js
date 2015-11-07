@@ -16,6 +16,9 @@ app.get('/', function(req, res){
 app.get("/script.js", function(req, res){
   res.sendFile('frontend/script.js', {'root': '../'});
 });
+app.get("/beziersplat.js", function(req, res){
+  res.sendFile('frontend/beziersplat.js', {'root': '../'});
+});
 app.get("/share.js", function(req, res){
   res.sendFile('share.js', {'root': '../'});
 });

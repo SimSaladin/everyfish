@@ -91,6 +91,7 @@ function startGame(c){
 
       case "RoundSplat":
         splash = new RoundSplat(json.data);
+        shape = splat.createBezierDefault(json.data.color, json.data.coords);
         break;
     }
 
@@ -115,11 +116,14 @@ function endGame(){
 function canvasClick(stage, event) {
     var coords = getCanvasCoords(event); 
 
-    // Option 1: Round splat
-    // (new RoundSplat(coords)).add();
-
-    // Option 2: ???
-    (new Circle(coords)).add();
+    switch (event.type) {
+       case "click":
+          (new Circle(coords)).add();
+          break;
+       case "contextmenu":
+          (new RoundSplat(coords)).add();
+          break;
+    }
 }
 
 function getCanvasCoords(event) {

@@ -1,3 +1,26 @@
+/**
+ * Namespace for splat operations
+ */
+var splat = splat || {};
+
+splat.createDefaultBezier = function (color, pos) {
+   var splat = new bezierSplat(bezierDefaultParamsFor(pos));
+   return splat.getShape(color);
+};
+
+splat.bezierDefaultParamsFor = function (pos) {
+   var params = bezierDefaultParams;
+   params.position = pos;
+   return params;
+};
+
+splat.bezierDefaultParams = {
+   radius: 40,
+   tipNo: 13.0,
+   offsetCoef: 3.0,
+   symmetry: false
+};
+
 /** 
  * Bezier Splat implementation object.
  *
@@ -7,21 +30,7 @@
  * @param coef {Num} a scaling coefficient
  * @param uniform {Boolean} uniform distribution of tips
 */
-function bezierSplat(pos, r,
-      tipN, coef, uniform) {
-
-   var params;
-   if (arguments.length == 0) {
-      params = bezierSplat.defaultParameters;
-   } else {
-      params = {
-         positions: pos,
-         radius: r,
-         tipNo: tipN,
-         offsetCoef: coef,
-         symmetry: uniform
-      };
-   }
+function bezierSplat(params) {
 
    var data = getPositions(params.position, params.radius,
          params.tipNo, params.offsetCoef, params.symmetry);
@@ -114,9 +123,3 @@ function bezierSplat(pos, r,
    };
 };
 
-bezierSplat.createDefault = function (color) {
-   var splat = new bezierSplat();
-   return splat.getShape(color);
-}
-
-function createBezierSplat(
