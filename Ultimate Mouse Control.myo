@@ -1,0 +1,163 @@
+scriptId = 'com.undercoveryeti.ultimatemousecontrol'  
+scriptTitle = "Ultimate Mouse Control"  
+scriptDetailsUrl = "https://market.myo.com/app/557af681e4b0910e1dcf8482"
+
+-- Set this to false to disable automatic locking when your arm is down at your side
+DROPLOCK = true
+
+-- Set this to false to disable vibration feedback, or just comment out notifyUser calls in places you really don't want it.
+HAPTIC_FEEDBACK = true
+
+SCROLL_ACCELERATION_RATE = 2
+SCROLL_INTERVAL = 100
+scrolling = 0
+lastScrollTime = 0
+wasActive = false
+
+description = [[  
+Mouse Control Script
+
+Control the mouse with your Myo armband! If you want this to be on all the time, make sure you put this at the BOTTOM of your Application Manager list, or nothing else will work. 
+
+If you would like this to only work for certain applications, follow the directions in onForegroundWindowChange.
+
+If you don't like the droplock behaviour, disable it by setting DROPLOCK = false
+
+Questions or problems? Talk to Paul (@PBernhardt)  
+]]
+
+link = [[ ]]
+
+controls = [[  
+Controls:  
+ - Move arm to control mouse
+ - Fist to left click
+ - Fingers spread to right click
+ - Wave in scroll down
+ - Wave out to scroll up
+ - Double tap to enable or disable cursor control
+ - Drop your arm to your side to disable control
+ ]]
+
+knownIssues = [[  
+ ]]
+
+
+ 
+function notifyUser(edge)  
+    if (HAPTIC_FEEDBACK and edge == "down") then
+        myo.notifyUserAction()
+    end
+end
+
+function leftClick(edge)  
+    notifyUser(edge)
+    myo.mouse("left",edge)
+end
+
+function rightClick(edge)  
+    notifyUser(edge)
+    myo.mouse("right",edge)
+end
+
+function scrollUp(edge)  
+    notifyUser(edge)
+    scrolling = edge == "down" and 1 or 0
+    scrollAcceleration = 0
+end
+
+function scrollDown(edge)  
+    notifyUser(edge)
+    scrolling = edge == "down" and -1 or 0
+    scrollAcceleration = 0
+end
+
+function lockMyo(edge)  
+    myo.controlMouse(false)
+    myo.lock()
+end
+
+ STANDARD_BINDINGS = {
+    fist            = leftClick,
+    fingersSpread   = rightClick,
+    waveOut         = scrollUp,
+    waveIn          = scrollDown,
+    doubleTap       = lockMyo
+}
+--STANDARD_BINDINGS = true
+
+bindings = STANDARD_BINDINGS
+
+-- Make sure mouse control is correctly disabled and re-enabled if the Quick Launch Menu is toggled
+function onActiveChange(isActive)
+    if (isActive == false) then
+        wasActive = myo.isUnlocked()
+        myo.debug("is active: false")
+        myo.controlMouse(false)
+    elseif wasActive then
+        myo.unlock("hold")
+        myo.controlMouse(true)
+    end
+end
+
+function onForegroundWindowChange(app, title)  
+    -- To make this work for a specific application rather than all applications, take these steps:
+
+    -- 1) Delete the following line
+    return true
+
+    -- 2) Uncomment (ie, delete -- from) the following line.
+    --myo.debug(app)
+
+    -- 3) Load your script into the Application Manager
+    -- 4) Turn on Developer Mode in Myo Connect -> Preferences
+    -- 5) Open the application you want to control
+        -- You should see something pop up in the Myo Debug console along the lines of
+        -- something.exe
+        -- on Windows, or 
+        -- com.something.somethingelse
+        -- on Mac. EG: Powerpoint will show you:
+        -- POWERPNT.EXE
+        -- or
+        -- com.microsoft.Powerpoint
+    -- 6) Copy and paste the line for your app, and replace YOUR_APP_HERE (leaving the quotes) in the following line
+    --return app == "YOUR_APP_HERE"
+
+    -- 8) Turn off developer mode, comment out or delete the myo.debug line from step 2, and save and reload your script in the Application Manager. Done!
+
+    -- OPTIONAL
+    -- Get stuck or want to do more? Try this tutorial series:
+    -- https://www.thalmic.com/blog/myo-script-tutorial-roundup/
+end
+
+function onPeriodic()
+    deltaTime = myo.getTimeMilliseconds() - lastScrollTime
+    if (scrolling ~= 0 and deltaTime > SCROLL_INTERVAL - scrollAcceleration) then
+        lastScrollTime = myo.getTimeMilliseconds()
+        myo.mouseScrollBy(scrolling)
+        scrollAcceleration = scrollAcceleration + SCROLL_ACCELERATION_RATE;
+    end
+
+    if (DROPLOCK and myo.isUnlocked() and myo.getPitch() < -1) then
+        lockMyo();
+    end
+end
+
+function activeAppName()  
+    return scriptTitle
+end
+
+function onUnlock()  
+    myo.unlock("hold")
+    myo.controlMouse(true)
+end
+
+function onPoseEdge(pose, edge)  
+    --pose = conditionallySwapWave(pose)
+    --myo.debug("onPoseEdge: " .. pose .. ": " .. edge)
+    fn = bindings[pose]
+    if fn then
+        keyEdge = edge == "off" and "up" or "down"
+        fn(keyEdge)
+    end
+end  
