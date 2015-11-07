@@ -97,13 +97,15 @@ function updateGame() {
   if (roachCreated) {
     if(oneOrTwo == 1) {
       roachPos = [50, Math.random() * CANVAS_HEIGHT];
+      roachAngle = Math.random() * 180;
     } else {
       roachPos = [CANVAS_WIDTH - 50, Math.random() * CANVAS_HEIGHT];
+      roachAngle = Math.random() * 180 + 180;
     }
 
     roachSeed = Math.random() * 2*Math.pi;
   
-    io.sockets.emit('roach', {pos : roachPos, seed : roachSeed, player : oneOrTwo});
+    io.sockets.emit('roach', {pos : roachPos, seed : roachSeed, angle : roachAngle, player : oneOrTwo});
   }
 
 }
