@@ -15,7 +15,7 @@ function createCockroach(stage, x, y, angle, turnSpeedCoeff) {
   wanderNoise.setAmplitude(1);
 
   // for disappearing and respawning
-  var gameFieldBoundary = new createjs.Rectangle(0,0,window.canvasWidth, window.canvasHeight);
+  var gameFieldBoundary = new createjs.Rectangle(0,0,window.CANVAS_WIDTH, window.CANVAS_HEIGHT);
   // increase size for more natural disappearing
   var hiddenMargin = 10;
   gameFieldBoundary.x = -hiddenMargin;
@@ -44,7 +44,6 @@ function createCockroach(stage, x, y, angle, turnSpeedCoeff) {
       else if (runner.y > gameFieldBoundary.y + gameFieldBoundary.height)
         runner.y -= gameFieldBoundary.height + bounds.height;
 
-      console.log(runner);
     }
   });
 

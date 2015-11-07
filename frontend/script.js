@@ -14,6 +14,7 @@ var scores = {};
 var splashes = [];
 
 var color; // The color of our splashes
+var cockroachSheet; // graphics resources for cockroach
 
 /* {{{ utility */
 var Simple1DNoise = function() {
@@ -84,6 +85,15 @@ jQuery(function(){
   createjs.Ticker.addEventListener("tick", stage);
 
   waitingForPlayers();
+
+  // load cockroach animation
+  cockroachSheet = new createjs.SpriteSheet( {
+    images: ["cockroach.png"],
+    frames: {width:175, height:207},
+    animations: {
+      run: [0,1]
+    }
+  });
 });
 
 function waitingForPlayers(){
@@ -135,6 +145,14 @@ function startGame(c){
   canvas.on("click", function(e){ canvasClick(stage, e); });
   // right click, disable contextmenu, do a click instead
   canvas.on("contextmenu", function(e){ canvasClick(stage, e); return false });
+
+  // testing
+  createCockroach(stage, 200,200,110);
+  // testing sizes:
+  drawLineSplat(stage, 100, 200, "red", Math.PI, 50);
+  drawLineSplat(stage, 250, 200, "red", Math.PI, 100);
+  drawLineSplat(stage, 400, 200, "red", Math.PI, 200);
+  drawLineSplat(stage, 600, 200, "red", Math.PI, 300);
 }
 
 function endGame(){
