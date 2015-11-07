@@ -90,8 +90,6 @@ function drawBezierSplat(stage, centerX, centerY, color) {
       .to(targetParameters, 1000,
             createjs.Ease.getPowInOut(4));
    
-   createjs.Ticker.setFPS(60);
-   createjs.Ticker.addEventListener("tick", stage);
 }
 
 function drawRoundSplat(stage, centerX, centerY, color) {
@@ -220,6 +218,9 @@ function canvasRightClick(stage, event) {
 
 function init() {
   var stage = new createjs.Stage("main");
+
+  createjs.Ticker.setFPS(60);
+  createjs.Ticker.addEventListener("tick", stage);
 
   //drawLineSplat(stage, 100, 200, "red", Math.PI, 50);
   //drawLineSplat(stage, 250, 200, "red", Math.PI, 100);

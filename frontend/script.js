@@ -6,10 +6,32 @@ var canvas, stage;
 
 var splashes = [];
 
+var animation = {
+   initialParameters: function (x, y) {
+      x: (1 - scaler) * x,
+      y: (1 - scaler) * y,
+      scaleX: scaler,
+      scaleY: scaler,
+      alpha: 0
+   },
+   targetParameters: {
+      x: -20,
+      y: -20,
+      scaleX: 1.0,
+      scaleY: 1.0,
+      alpha: 1
+   },
+   duration: 1000,
+   ease: createjs.Ease.getPowInOut(4)
+};
+
 jQuery(function(){
   console.log("ready");
   canvas = jQuery("#main");
   stage = new createjs.Stage("main");
+
+  createjs.Ticker.setFPS(60);
+  createjs.Ticker.addEventListener("tick", stage);
 
   socket.on("splash", function(msg){
 
@@ -30,7 +52,7 @@ jQuery(function(){
 
     splashes.concat([splash]);
     stage.addChild(shape);
-    stage.update();
+    animateShape(shape);
   });
 
   // Click listeners
@@ -69,6 +91,12 @@ function getCanvasCoords(event) {
   y -= canvas[0].offsetTop;
   
   return {'x': x, 'y': y};
+}
+
+function animateShape(shape) {
+   shape.set(animation.initialParameters(shape.x, shape.y));
+   createjs.Tween.get(shape, { loop: false })
+      .to(animation.targetParameters, animation.duration, animation.ease);
 }
 
 /* }}} */
