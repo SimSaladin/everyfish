@@ -58,17 +58,41 @@ var Simple1DNoise = function() {
 };
 
 function drawBezierSplat(stage, centerX, centerY, color) {
-   var pos = [centerX, centerY]; // position
-   var r = 40.0; // radius
-   var tipN = 13.0; // amount of points
-   var maxOffset = 3.0; // scales the tips
+   var pos = [centerX, centerY], // position
+       r = 40.0, // radius
+       tipN = 13.0, // amount of points
+       maxOffset = 3.0, // scales the tips
+       scaler = 0.5;
+
+   var initialParameters = {
+      x: (1 - scaler) * centerX,
+      y: (1 - scaler) * centerY,
+      scaleX: scaler,
+      scaleY: scaler,
+      alpha: 0
+   };
+
+   var targetParameters = {
+      x: -20,
+      y: -20,
+      scaleX: 1.0,
+      scaleY: 1.0,
+      alpha: 1
+   };
 
    var splat = new bezierSplat(pos, r, tipN, maxOffset, false);
+   var shape = splat.getShape(color);
+   shape.set(initialParameters);
 
-   stage.addChild(splat.getShape(color));
-   stage.update();
+   stage.addChild(shape);
+
+   createjs.Tween.get(shape, { loop: false })
+      .to(targetParameters, 1000,
+            createjs.Ease.getPowInOut(4));
+   
+   createjs.Ticker.setFPS(60);
+   createjs.Ticker.addEventListener("tick", stage);
 }
-
 
 function drawRoundSplat(stage, centerX, centerY, color) {
   var curve = new createjs.Shape();
