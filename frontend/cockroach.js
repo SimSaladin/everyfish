@@ -17,7 +17,7 @@ function createCockroach(stage, x, y, angle, turnSpeedCoeff, speed) {
   // for disappearing and respawning
   var gameFieldBoundary = new createjs.Rectangle(0,0,window.CANVAS_WIDTH, window.CANVAS_HEIGHT);
   // increase size for more natural disappearing
-  var hiddenMargin = 10;
+  var hiddenMargin = 60;
   gameFieldBoundary.x = -hiddenMargin;
   gameFieldBoundary.y = -hiddenMargin;
   gameFieldBoundary.width += 2*hiddenMargin;
