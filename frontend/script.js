@@ -94,6 +94,8 @@ jQuery(function(){
       run: [0,1]
     }
   });
+
+  window.setTimeout(calculatePixels, 500);
 });
 
 function waitingForPlayers(){
@@ -112,7 +114,7 @@ function startGame(c){
 
   scoreBlock[COLORS[0]] = new createjs.Text("Score 0", "15px Arial", COLORS[0]);
   scoreBlock[COLORS[1]] = new createjs.Text("Score 0", "15px Arial", COLORS[1]);
-  scoreBlock[COLORS[0]].y = scoreBlock[COLORS[1]].y = 30;
+  scoreBlock[COLORS[0]].y = scoreBlock[COLORS[1]].y = 20;
   scoreBlock[COLORS[0]].x = 50;
   scoreBlock[COLORS[1]].x = 700;
   stage.addChild(scoreBlock[COLORS[0]]);
@@ -241,19 +243,15 @@ function calculatePixels() {
 
 
   while (i > 0) {
-    rgb = [pixels[i++], pixels[i++], pixels[i++]]
-    whoseDot = compareColors(rgb);
-    if (whoseDot == COLORS[0]) {
-      scores[ COLORS[0] ] += 1;
-    } else if (whoseDot == COLORS[1]) {
-      scores[ COLORS[1] ] += 1;
-    }
-    i++;
+    if (pixels[i--] == 0) continue;
+    rgb = [pixels[i--], pixels[i--], pixels[i--]].reverse();
+    scores[ compareColors(rgb) ] += 1;
   }
 
   scoreBlock[ COLORS[0] ].text = "Score " + scores[ COLORS[0] ];
   scoreBlock[ COLORS[1] ].text = "Score " + scores[ COLORS[1] ];
 
+  window.setTimeout(calculatePixels, 500);
   
 }
 
@@ -269,16 +267,8 @@ function compareColors(rgb) {
 
   distanceToOne = colorDistance(rgb, COLORS_RGB[0]);
   distanceToTwo = colorDistance(rgb, COLORS_RGB[1]);
-  distanceToWhite = colorDistance(rgb, [255, 255, 255]);
 
-  if (distanceToWhite < distanceToTwo && distanceToWhite < distanceToOne) {
-    return null;
-  } else if (distanceToTwo > distanceToWhite) {
-    return COLORS[0];
-  } else {
-    return COLORS[1];
-  }
-
+  return (distanceToTwo > distanceToOne) ? COLORS[0] : COLORS[1];
 }
 
 
