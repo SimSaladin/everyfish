@@ -2,12 +2,17 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var CANVAS_WIDTH = 800, CANVAS_HEIGHT = 550;
 var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must be same in frontend/script.js
+var roachPerPlayer = 50;
+var roachDensity = 0.2;
 
 var socket_count = 0 // only increased atm
 var sockets = {} // socket.id -> socket
 var colors = {} // socket -> splash color
 var splashes = {} // socket -> list of splashes
+var roaches = {} // counts the number of roaches per player created
+var intervalid = {};
 
 /* {{{ Routes */
 app.get('/', function(req, res){
@@ -46,6 +51,7 @@ io.on('connection', function(socket){
   socket.on('disconnect', function(){
     console.log('user disconnected');
     delete splashes[socket.id];
+    clearInterval(intervalid);
   });
 
   if (Object.keys(splashes).length >= 2) {
@@ -54,6 +60,7 @@ io.on('connection', function(socket){
 });
 
 function startGame(socket, color){
+  roaches = [0, 0]
   console.log("starting game");
   for (var c in splashes) {
     console.log(c, splashes[c]);
@@ -71,7 +78,37 @@ function startGame(socket, color){
   });
 
   socket.emit('start', color);
+
+  intervalid = setInterval(updateGame, 1000);
+
 }
+
+function updateGame() {
+  // create roach pos & seed here
+  roachCreated = Math.random () < roachDensity;
+  if (Math.random() <= 0.5 && roaches[0] < roachPerPlayer) {
+    oneOrTwo = 1;
+    roaches[0] += 1;
+  } else if (roaches[1] < roachPerPlayer) {
+    oneOrTwo = 2;
+    roaches[1] += 1;
+  }
+
+  if (roachCreated) {
+    if(oneOrTwo == 1) {
+      roachPos = [50, Math.random() * CANVAS_HEIGHT];
+    } else {
+      roachPos = [CANVAS_WIDTH - 50, Math.random() * CANVAS_HEIGHT];
+    }
+
+    roachSeed = Math.random() * 2*Math.pi;
+  
+    io.sockets.emit('roach', {pos : roachPos, seed : roachSeed, player : oneOrTwo});
+  }
+
+}
+
+
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
