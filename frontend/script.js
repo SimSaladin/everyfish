@@ -28,7 +28,7 @@ Math.seed = function(s) {
                     };
 };
 
-var Simple1DNoise = function() {
+var Simple1DNoise = function(random) {
     var MAX_VERTICES = 256;
     var MAX_VERTICES_MASK = MAX_VERTICES -1;
     var amplitude = 1;
@@ -37,7 +37,7 @@ var Simple1DNoise = function() {
     var r = [];
 
     for ( var i = 0; i < MAX_VERTICES; ++i ) {
-        r.push(Math.random());
+        r.push(random());
     }
 
     var getVal = function( x ){
@@ -146,7 +146,7 @@ function startGame(c){
 
       case "RoundSplat":
         splash = new RoundSplat(json.data);
-        shape = splat.createDefaultRound(json.data.color, json.data.coords);
+        shape = splat.createDefaultRound(json.data.color, json.data.coords, json.data.seed);
         break;
     }
 
@@ -154,18 +154,14 @@ function startGame(c){
     animateShape(stage, shape, splash.data.coords);
   });
 
+  socket.on("roach", function(data) {
+    createCockroach(stage, data.seed, data.x, data.y, data.angle);
+  });
+
   // Click listeners
   canvas.on("click", function(e){ canvasClick(stage, e); });
   // right click, disable contextmenu, do a click instead
   canvas.on("contextmenu", function(e){ canvasClick(stage, e); return false });
-
-  // testing
-  createCockroach(stage, 200,200,110);
-  // testing sizes:
-  stage.addChild(getLineSplat(100, 200, "red", Math.PI, 50));
-  stage.addChild(getLineSplat(250, 200, "red", Math.PI, 100));
-  stage.addChild(getLineSplat(400, 200, "red", Math.PI, 200));
-  stage.addChild(getLineSplat(600, 200, "red", Math.PI, 300));
   
   stage.update();
 }

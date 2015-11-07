@@ -1,11 +1,11 @@
 
-function getRoundSplat(centerX, centerY, color) {
+function getRoundSplat(centerX, centerY, color, seed) {
   var curve = new createjs.Shape();
   curve.graphics.beginStroke(color);
   curve.graphics.beginFill(color);
 
 
-  var noise = new Simple1DNoise();
+  var noise = new Simple1DNoise(Math.seed(seed));
 
 
   noise.setAmplitude(25);          // spike variation measure
@@ -41,13 +41,13 @@ function gaussian(x, stdev) {
   return Math.exp(-(x*x/(2*stdev*stdev))) / Math.sqrt(2*Math.PI) * stdev;
 }
 
-function getLineSplat(startX, startY, color, angle, length) {
+function getLineSplat(startX, startY, color, angle, length, seed) {
   var curve = new createjs.Shape();
   curve.graphics.beginStroke(color);
   curve.graphics.beginFill(color);
 
 
-  var noise = new Simple1DNoise();
+  var noise = new Simple1DNoise(Math.seed(seed));
 
 
   noise.setAmplitude(1);          // spike variation measure

@@ -1,6 +1,7 @@
 
 // Takes starting position and starting angle (in degrees)
-function createCockroach(stage, x, y, angle, turnSpeedCoeff, speed) {
+function createCockroach(stage, seed, x, y, angle, turnSpeedCoeff, speed) {
+  random = Math.seed(seed);
   if (!turnSpeedCoeff) turnSpeedCoeff = 0.001;
   if (!speed) speed = 4;
 
@@ -11,7 +12,7 @@ function createCockroach(stage, x, y, angle, turnSpeedCoeff, speed) {
   var bounds = runner.getBounds();
   runner.setTransform(x, y, 1, 1, angle, 0, 0, bounds.width/2, bounds.height*1.2/2);
 
-  var wanderNoise = new Simple1DNoise();
+  var wanderNoise = new Simple1DNoise(random);
   wanderNoise.setAmplitude(1);
 
   // for disappearing and respawning

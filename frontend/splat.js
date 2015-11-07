@@ -32,8 +32,8 @@ splat.createDefaultLine = function (color, pos, length) {
    return splatShape;
 }
 
-splat.createDefaultRound = function (color, pos) {
-   var splatShape = getRoundSplat(pos.x, pos.y, color);
+splat.createDefaultRound = function (color, pos, seed) {
+   var splatShape = getRoundSplat(pos.x, pos.y, color, seed);
    return splatShape;
 }
 

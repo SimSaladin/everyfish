@@ -5,6 +5,7 @@ Splash = Class.create({
   initialize: function(data){
     this.data = data;
     this.data.color = color;
+    this.data.seed = Math.seed();
     this.json = { type: this.type, data: data };
   },
 
