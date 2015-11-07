@@ -2,6 +2,7 @@
 var socket = io();
 
 var CANVAS_WIDTH = 800, CANVAS_HEIGHT = 550;
+var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must be same in frontend/script.js
 
 var canvas, stage;
 var infoBlock;
@@ -140,4 +141,23 @@ function animateShape(stage, shape, coords) {
       .to(animation.targetParameters, animation.duration, animation.ease);
 }
 
+/* }}} */
+
+/* {{{ Winner calculation */
+function calculatePixels() {
+  pixels = document.getElementById("main").getContext("2d").getImageData(0,9,CANVAS_WIDTH,CANVAS_HEIGHT-9).data;
+
+  var i = pixels.length;
+
+  counts = {};
+  counts[ COLORS[0] ] = 0;
+  counts[ COLORS[1] ] = 0;
+
+  while (i > 0) {
+    counts[compareColors(pixels[i++], pixels[i++], pixels[i++])] += 1;
+    i++;
+  }
+
+  return counts;
+}
 /* }}} */

@@ -2,7 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes
+var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must be same in frontend/script.js
 
 var socket_count = 0 // only increased atm
 var sockets = {} // socket.id -> socket
