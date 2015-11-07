@@ -7,12 +7,12 @@ var canvas, stage;
 var splashes = [];
 
 var animation = {
-   initialParameters: function (x, y) {
-      x: (1 - scaler) * x,
-      y: (1 - scaler) * y,
-      scaleX: scaler,
-      scaleY: scaler,
-      alpha: 0
+   initialParameters: function (x, y, scaler) {
+      this.x = (1 - scaler) * x;
+      this.y = (1 - scaler) * y;
+      this.scaleX = scaler;
+      this.scaleY = scaler;
+      this.alpha = 0;
    },
    targetParameters: {
       x: -20,
@@ -51,8 +51,7 @@ jQuery(function(){
     }
 
     splashes.concat([splash]);
-    stage.addChild(shape);
-    animateShape(shape);
+    animateShape(stage, shape, splash.data.coords);
   });
 
   // Click listeners
@@ -93,8 +92,10 @@ function getCanvasCoords(event) {
   return {'x': x, 'y': y};
 }
 
-function animateShape(shape) {
-   shape.set(animation.initialParameters(shape.x, shape.y));
+function animateShape(stage, shape, coords) {
+   shape.set(animation.initialParameters(coords.x, coords.y, 0.5));
+   stage.addChild(shape);
+
    createjs.Tween.get(shape, { loop: false })
       .to(animation.targetParameters, animation.duration, animation.ease);
 }
