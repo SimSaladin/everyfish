@@ -79,21 +79,18 @@ function bezierSplat(params) {
     * @return create.js shape
    */
    this.getShape = function (color) {
-      var positions = getPositions(pos, r,
-            tipN, coef, uniform);
-
       var curve = new createjs.Graphics()
          .beginStroke(color)
          .beginFill(color);
 
-      for (i = 0; i < positions.length - 2; i += 2) {
+      for (i = 0; i < data.length - 2; i += 2) {
          curve = curve.bezierCurveTo(
-               positions[i][0],
-               positions[i][1],
-               positions[i+1][0],
-               positions[i+1][1],
-               positions[i+2][0],
-               positions[i+2][1]);
+               data[i][0],
+               data[i][1],
+               data[i+1][0],
+               data[i+1][1],
+               data[i+2][0],
+               data[i+2][1]);
       }
 
       return new createjs.Shape(curve);
