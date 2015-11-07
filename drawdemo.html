@@ -53,47 +53,52 @@ var Simple1DNoise = function() {
     };
 };
 
-         function init() {
-            var stage = new createjs.Stage("main");
-
-            var curve = new createjs.Shape();
-	    curve.graphics.beginStroke("red");
-	    curve.graphics.beginFill("red");
+function drawRoundSplat(stage, centerX, centerY, color) {
+  var curve = new createjs.Shape();
+  curve.graphics.beginStroke(color);
+  curve.graphics.beginFill(color);
 
 
-	    var noise = new Simple1DNoise();
+  var noise = new Simple1DNoise();
 
 
-	    noise.setAmplitude(25);          // spike variation measure
-	    var baseCircleRadius = 25;  // minimum radius 
-	    var spikeMultiplier = 5;  // larger value creates spikes with higher probability
-	    var sharpnessScale = 1.0 / 7; // spike length multiplier
-	    var resolution = 100; // number of line segments
+  noise.setAmplitude(25);          // spike variation measure
+  var baseCircleRadius = 25;  // minimum radius 
+  var spikeMultiplier = 5;  // larger value creates spikes with higher probability
+  var sharpnessScale = 1.0 / 7; // spike length multiplier
+  var resolution = 100; // number of line segments
 
-	    // circle center coordinates
-	    var x0 = 200;
-	    var y0 = 200;
-		   
+  // circle center coordinates
+  var x0 = centerX;
+  var y0 = centerY;
 
-	    var sin = Math.sin, cos = Math.cos;
 
-	    // begin point, invert y axis
-	    curve.graphics.moveTo(x0, y0 - baseCircleRadius - noise.getVal(0));
+  var sin = Math.sin, cos = Math.cos;
 
-	    for (var i = 0 ; i < resolution; i++) {
-	      var theta = Math.PI * 2 * i / resolution;
+  // begin point, invert y axis
+  curve.graphics.moveTo(x0, y0 - baseCircleRadius - noise.getVal(0));
 
-	      var amplitude = noise.getVal(theta * spikeMultiplier);
+  for (var i = 0 ; i < resolution; i++) {
+    var theta = Math.PI * 2 * i / resolution;
 
-	      amplitude = baseCircleRadius + amplitude * amplitude * sharpnessScale; // sharper spikes with some shrinking?
+    var amplitude = noise.getVal(theta * spikeMultiplier);
 
-	      // inverted y-axis, y grows up
-	      curve.graphics.lineTo( x0 + sin(theta) * amplitude, y0 - cos(theta) * amplitude );
-	    }
+    amplitude = baseCircleRadius + amplitude * amplitude * sharpnessScale; // sharper spikes with some shrinking?
 
-            stage.addChild(curve);
-            stage.update();
-         }
+    // inverted y-axis, y grows up
+    curve.graphics.lineTo( x0 + sin(theta) * amplitude, y0 - cos(theta) * amplitude );
+  }
+
+  stage.addChild(curve);
+  stage.update();
+}
+
+
+
+function init() {
+  var stage = new createjs.Stage("main");
+  drawRoundSplat(stage, 200, 200, "red");
+}
       </script>
    </head>
    <body onload="init();">
