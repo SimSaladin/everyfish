@@ -1,0 +1,28 @@
+<html>
+   <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <script src="https://code.createjs.com/createjs-2015.05.21.min.js"></script>
+      <script src="http://www.numericjs.com/lib/numeric-1.2.6.js"></script>
+      <script src="beziersplat.js"></script>
+      <script>
+         function init() {
+            // stage
+            var stage = new createjs.Stage("main");
+
+            // parameters
+            var pos = [100.0, 100.0]; // position
+            var r = 40.0; // radius
+            var tipN = 13.0; // amount of points
+            var maxOffset = 3.0; // scales the tips
+
+            var splat = new bezierSplat(pos, r, tipN, maxOffset, false);
+
+            stage.addChild(splat.getShape("red"));
+            stage.update();
+         }
+      </script>
+   </head>
+   <body onload="init();">
+      <canvas id="main" width="500" height="200"></canvas>
+   </body>
+</html>
