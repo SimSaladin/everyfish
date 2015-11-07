@@ -17,6 +17,17 @@ var color; // The color of our splashes
 var cockroachSheet; // graphics resources for cockroach
 
 /* {{{ utility */
+
+// usage:
+// var random1 = Math.seed(42);
+// var random2 = Math.seed(random1());
+// Math.random = Math.seed(random2());
+Math.seed = function(s) {
+      return function() {
+                s = Math.sin(s) * 10000; return s - Math.floor(s);
+                    };
+};
+
 var Simple1DNoise = function() {
     var MAX_VERTICES = 256;
     var MAX_VERTICES_MASK = MAX_VERTICES -1;
