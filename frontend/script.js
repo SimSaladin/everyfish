@@ -6,6 +6,8 @@ var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must 
 
 var canvas, stage;
 var infoBlock;
+var scoreBlock = {};
+var scores = {};
 
 var splashes = [];
 
@@ -64,6 +66,14 @@ function startGame(c){
   indicator.graphics.beginFill(c).drawRect(0,0,CANVAS_WIDTH,9);
   stage.addChild(indicator);
 
+  scoreBlock[COLORS[0]] = new createjs.Text("Score 0", "15px Arial", COLORS[0]);
+  scoreBlock[COLORS[1]] = new createjs.Text("Score 0", "15px Arial", COLORS[1]);
+  scoreBlock[COLORS[0]].y = scoreBlock[COLORS[1]].y = 30;
+  scoreBlock[COLORS[0]].x = 50;
+  scoreBlock[COLORS[1]].x = 700;
+  stage.addChild(scoreBlock[COLORS[0]]);
+  stage.addChild(scoreBlock[COLORS[1]]);
+
   stage.removeChild(infoBlock);
   socket.on("splash", function(msg){
 
@@ -79,7 +89,6 @@ function startGame(c){
 
       case "RoundSplat":
         splash = new RoundSplat(json.data);
-        shape = 
         break;
     }
 
@@ -149,15 +158,17 @@ function calculatePixels() {
 
   var i = pixels.length;
 
-  counts = {};
-  counts[ COLORS[0] ] = 0;
-  counts[ COLORS[1] ] = 0;
+  scores[ COLORS[0] ] = 0;
+  scores[ COLORS[1] ] = 0;
 
   while (i > 0) {
-    counts[compareColors(pixels[i++], pixels[i++], pixels[i++])] += 1;
+    scores[compareColors(pixels[i++], pixels[i++], pixels[i++])] += 1;
     i++;
   }
 
-  return counts;
+  scoreBlock[ COLORS[0] ].text = "Score " + scores[ COLORS[0] ];
+  scoreBlock[ COLORS[1] ].text = "Score " + scores[ COLORS[1] ];
+
+  
 }
 /* }}} */
