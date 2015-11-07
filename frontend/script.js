@@ -2,23 +2,35 @@ var socket = io();
 
 var CANVAS_WIDTH = 800, CANVAS_HEIGHT = 550;
 
-share.createjs = createjs;
-
 var canvas, stage;
 
 var splashes = [];
 
-function init(){
-  canvas = $("#main");
-  stage = new createjs.Stage("#main");
+jQuery(function(){
+  console.log("ready");
+  canvas = jQuery("#main");
+  stage = new createjs.Stage("main");
 
   socket.on("splash", function(msg){
-    console.log(msg);
 
-    var splash = new share.Splash(msg);
+    var splash;
+    var shape = new createjs.Shape();
+    var json = JSON.parse(msg);
+    switch(json.type) {
+
+      case "Circle":
+        splash = new Circle(json.data);
+        shape.graphics.beginFill("red").drawCircle(json.data.coords.x, json.data.coords.y, json.data.radius);
+        break;
+
+      case "RoundSplat":
+        splash = new RoundSplat(json.data);
+        break;
+    }
+
     splashes.concat([splash]);
-
-    splash.draw(stage, new createjs.Graphics());
+    stage.addChild(shape);
+    stage.update();
   });
 
   // Click listeners
@@ -26,7 +38,7 @@ function init(){
   canvas.on("click", function(e) {canvasClick(stage, e)});
   // right click, disable contextmenu, do a click instead
   canvas.on("contextmenu", function(e) {canvasClick(stage, e); return false;});
-}
+});
 
 /* {{{ Input */
 
@@ -35,9 +47,10 @@ function canvasClick(stage, event) {
     var coords = getCanvasCoords(event); 
 
     // Option 1: Round splat
-    (new share.RoundSplat(coords)).add();
+    // (new RoundSplat(coords)).add();
 
     // Option 2: ???
+    (new Circle(coords)).add();
 }
 
 function getCanvasCoords(event) {
