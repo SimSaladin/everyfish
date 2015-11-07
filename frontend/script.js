@@ -3,8 +3,11 @@ var socket = io();
 var CANVAS_WIDTH = 800, CANVAS_HEIGHT = 550;
 
 var canvas, stage;
+var infoBlock;
 
 var splashes = [];
+
+var color; // The color of our splashes
 
 var animation = {
    initialParameters: function (x, y, scaler) {
@@ -30,9 +33,28 @@ jQuery(function(){
   canvas = jQuery("#main");
   stage = new createjs.Stage("main");
 
+  socket.on("connect", function (s) {
+    console.log("socket.io connected");
+  });
+
+  socket.on("start", startGame);
+
   createjs.Ticker.setFPS(60);
   createjs.Ticker.addEventListener("tick", stage);
 
+  waitingForPlayers();
+});
+
+function waitingForPlayers(){
+  infoBlock = new createjs.Text("Waiting for another player...", "20px Arial", "#ff7700");
+  infoBlock.x = 200;
+  infoBlock.y = 150;
+  stage.addChild(infoBlock);
+}
+
+function startGame(c){
+  color = c;
+  stage.removeChild(infoBlock);
   socket.on("splash", function(msg){
 
     var splash;
@@ -42,7 +64,7 @@ jQuery(function(){
 
       case "Circle":
         splash = new Circle(json.data);
-        shape.graphics.beginFill("red").drawCircle(json.data.coords.x, json.data.coords.y, json.data.radius);
+        shape.graphics.beginFill(json.data.color).drawCircle(json.data.coords.x, json.data.coords.y, json.data.radius);
         break;
 
       case "RoundSplat":
@@ -55,11 +77,13 @@ jQuery(function(){
   });
 
   // Click listeners
-
-  canvas.on("click", function(e) {canvasClick(stage, e)});
+  canvas.on("click", function(e){ canvasClick(stage, e); });
   // right click, disable contextmenu, do a click instead
-  canvas.on("contextmenu", function(e) {canvasClick(stage, e); return false;});
-});
+  canvas.on("contextmenu", function(e){ canvasClick(stage, e); return false });
+}
+
+function endGame(){
+}
 
 /* {{{ Input */
 
