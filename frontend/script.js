@@ -276,6 +276,9 @@ function animateShape(stage, shape, coords) {
    shape.set(animation.initialParameters(coords.x, coords.y, 0.5));
    stage.addChild(shape);
 
+   // move to background
+   stage.setChildIndex(shape, splashes.length);
+
    createjs.Tween.get(shape, { loop: false })
       .to(animation.targetParameters, animation.duration, animation.ease);
 }

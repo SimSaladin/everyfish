@@ -8,16 +8,19 @@ because it is rather stupid
 
 ## TODO
 
-- The cockroaches:
+- ~~The cockroaches~~:
   - ~~animations~~
-  - random walk
+  - ~~random walk~~
 - Game ~~start~~ and end
 - ~~Different colors for different players~~
 - Scoring: controlled area, number of killed cockroaches, what else? style
   points?
+- ~~Fix splat draw order~~
 - Prettier splats (animated)
-- Different types of splats
-- Map gestures to splats - do we need a custom driver for myo?
+- Map myo to different splats
+  - do we need a custom driver for myo?
+  - use velocity
 - A "crusher hand" cursor
-- Background image
+- pointer lock or other features for miss clicks and UX?
+- Background image - or will it be too confusing/dirty?
 - Set up running somewhere. Domain?
