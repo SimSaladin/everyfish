@@ -1,3 +1,12 @@
+/** 
+ * Bezier Splat implementation object.
+ *
+ * @param pos {[Num]} the center of the splat
+ * @param r {Num} the radius of the splat
+ * @param tipN {Num} number of the tips
+ * @param coef {Num} a scaling coefficient
+ * @param uniform {Boolean} uniform distribution of tips
+*/
 function bezierSplat(pos, r,
       tipN, coef, uniform) {
 
@@ -61,6 +70,12 @@ function bezierSplat(pos, r,
       return positions;
    };
 
+   /* Get the fixed create.js shape for
+    * your splat.
+    *
+    * @param color {String} the color of the splat
+    * @return create.js shape
+   */
    this.getShape = function (color) {
       var positions = getPositions(pos, r,
             tipN, coef, uniform);
@@ -77,7 +92,6 @@ function bezierSplat(pos, r,
                positions[i+1][1],
                positions[i+2][0],
                positions[i+2][1]);
-
       }
 
       return new createjs.Shape(curve);
