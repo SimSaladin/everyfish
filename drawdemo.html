@@ -1,7 +1,9 @@
 <html>
    <head>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-      <script src="https://code.createjs.com/createjs-2015.05.21.min.js"></script>
+     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+      <!--<script src="https://code.createjs.com/createjs-2015.05.21.min.js"></script>-->
+      <script src="./jquery.min.js"></script>
+      <script src="./createjs-2015.05.21.min.js"></script>
       <script>
 var Simple1DNoise = function() {
     var MAX_VERTICES = 256;
@@ -53,6 +55,7 @@ var Simple1DNoise = function() {
     };
 };
 
+
 function drawRoundSplat(stage, centerX, centerY, color) {
   var curve = new createjs.Shape();
   curve.graphics.beginStroke(color);
@@ -81,7 +84,7 @@ function drawRoundSplat(stage, centerX, centerY, color) {
   for (var i = 0 ; i < resolution; i++) {
     var theta = Math.PI * 2 * i / resolution;
 
-    var amplitude = noise.getVal(theta * spikeMultiplier);
+    var amplitude = (noise.getVal(theta * spikeMultiplier) + noise.getVal((Math.PI * 2 + theta)* spikeMultiplier))/2;
 
     amplitude = baseCircleRadius + amplitude * amplitude * sharpnessScale; // sharper spikes with some shrinking?
 
@@ -93,15 +96,48 @@ function drawRoundSplat(stage, centerX, centerY, color) {
   stage.update();
 }
 
+$(function(){
+  window.gCanvasElement = $("#main");
 
+})
+
+
+function getCanvasCoords(event) {
+  var e = event;
+  var x;
+  var y;
+  if (e.pageX || e.pageY) { 
+    x = e.pageX;
+    y = e.pageY;
+  }
+  else { 
+    x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
+    y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+  } 
+  x -= gCanvasElement[0].offsetLeft;
+  y -= gCanvasElement[0].offsetTop;
+  
+  return {'x': x, 'y': y};
+}
+
+function canvasClick(stage, event) {
+    var coords = getCanvasCoords(event); 
+    console.log(event);
+    console.log(coords);
+    drawRoundSplat(stage, coords.x, coords.y, "red");
+}
 
 function init() {
   var stage = new createjs.Stage("main");
-  drawRoundSplat(stage, 200, 200, "red");
+
+  // left click
+  gCanvasElement.on("click", function(e) {canvasClick(stage, e)});
+  // right click, disable contextmenu, do a click instead
+  gCanvasElement.on("contextmenu", function(e) {canvasClick(stage, e); return false;});
 }
       </script>
    </head>
    <body onload="init();">
-      <canvas id="main" width="600" height="500"></canvas>
+      <canvas id="main" width="800" height="550" style="border: 2px solid"></canvas>
    </body>
 </html>
