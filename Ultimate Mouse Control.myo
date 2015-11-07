@@ -14,8 +14,8 @@ scrolling = 0
 lastScrollTime = 0
 wasActive = false
 
-accmax = 0
-accmin = 0
+accmax = 1
+accmin = 2
 accinterval = math.floor((accmax - accmin) / 4);
 
 description = [[  
