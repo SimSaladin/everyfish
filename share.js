@@ -20,5 +20,13 @@
   }
   /* }}} */
 
+  /* {{{ Round Splat */
+  exports.RoundSplat = function(coords) {
+    console.log($("#main"));
+    exports.Splash({ coords : coords });
+  }
+  exports.RoundSplat.prototype = exports.Splash.prototype;
+  /* }}} */
+
 }(typeof exports === 'undefined' ? this.share = {} : exports));
 
