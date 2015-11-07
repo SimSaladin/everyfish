@@ -216,23 +216,50 @@ function canvasRightClick(stage, event) {
    drawBezierSplat(stage, coords.x, coords.y, "red");
 }
 
+
+// Takes starting position and starting angle (in degrees)
+function createCockroach(stage, x, y, angle, turnSpeedCoeff) {
+  if (!turnSpeedCoeff) turnSpeedCoeff = 0.001;
+  var speed = 1;
+
+  var runner = new createjs.Sprite(cockroachSheet, "run");
+  runner.setTransform(x, y, 1, 1, angle);
+  runner.framerate = 20;
+
+  var wanderNoise = new Simple1DNoise();
+  createjs.Ticker.addEventListener("tick", function(e) {
+    runner.rotation = (wanderNoise.getVal(e.timeStamp * turnSpeedCoeff) * 360);
+    var curRotRad = runner.rotation * 180 / Math.PI;
+    runner.x = runner.x + -Math.sin(curRotRad) * speed;
+    runner.y = runner.y + -Math.cos(curRotRad) * speed;
+  });
+
+  stage.addChild(runner);
+  stage.update();
+  return runner;
+}
+
 function init() {
   var stage = new createjs.Stage("main");
 
   // load cockroach animation
-  var cockroachData = {
+  window.cockroachSheet = new createjs.SpriteSheet( {
     images: ["cockroach.png"],
     frames: {width:175, height:207},
     animations: {
       run: [0,1]
     }
-  };
-  var cockroachSheet = new createjs.SpriteSheet(cockroachData);
-  var runner1 = new createjs.Sprite(cockroachSheet, "run");
-  runner1.setTransform(200,200);
-  runner1.framerate = 20;
-  stage.addChild(runner1);
-  stage.update();
+  });
+
+  createCockroach(stage, 200,200,110);
+  createCockroach(stage, 200,300,110);
+  createCockroach(stage, 300,200,110);
+  createCockroach(stage, 400,200,110);
+  createCockroach(stage, 200,400,110);
+  createCockroach(stage, 500,300,110);
+  createCockroach(stage, 500,300,110);
+  createCockroach(stage, 400,400,110);
+
   //drawLineSplat(stage, 100, 200, "red", Math.PI, 50);
   //drawLineSplat(stage, 250, 200, "red", Math.PI, 100);
   //drawLineSplat(stage, 400, 200, "red", Math.PI, 200);
