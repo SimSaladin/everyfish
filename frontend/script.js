@@ -166,7 +166,50 @@ function startGame(c){
   stage.update();
 }
 
+Math.randomFromInterval = function (min, max) {
+   return Math.floor(Math.random() * (max - min)) + min;  
+};
+
 function endGame(){
+   var positions,
+       information,
+       effects;
+   var i, safeDist = 100,
+       effectsAmount = 2;
+
+   effects = new Array(effectsAmount);
+   positions = new Array(effectsAmount);
+   
+   information = new createjs.Text("The end!", 
+         "20px Arial", "#ff7700");
+
+   /* randomize positions */
+   for (i = 0; i < effectsAmount; i++) {
+      positions[i] = {};
+      positions[i].x = Math.randomFromInterval(
+            safeDist, CANVAS_WIDTH - safeDist);
+      positions[i].y = Math.randomFromInterval(
+            safeDist, CANVAS_HEIGHT - safeDist);
+   };
+
+   console.log(positions);
+
+   effects[0] = splat.createDefaultLine(
+         color, positions[0], 200, Math.PI);
+   effects[1] = splat.createDefaultRound(
+         color, positions[1]);
+
+   stage.removeAllChildren();
+
+   effects.forEach(function (element, index) {
+      animateShape(stage, element, positions[index]);
+   });
+
+   console.log(effects.length);
+
+   information.x = 200;
+   information.y = 150;
+   stage.addChild(information);
 }
 
 /* }}} */
