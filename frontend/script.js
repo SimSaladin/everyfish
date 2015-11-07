@@ -3,6 +3,8 @@ var socket = io();
 
 var CANVAS_WIDTH = 800, CANVAS_HEIGHT = 550;
 var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must be same in frontend/script.js
+var COLORS_RGB = [[133, 255, 0], [0, 184, 255]]
+
 
 var canvas, stage;
 var infoBlock;
@@ -150,9 +152,6 @@ function animateShape(stage, shape, coords) {
       .to(animation.targetParameters, animation.duration, animation.ease);
 }
 
-function colorDistance(rgb) {
-   
-
 /* }}} */
 
 /* {{{ Winner calculation */
@@ -164,8 +163,15 @@ function calculatePixels() {
   scores[ COLORS[0] ] = 0;
   scores[ COLORS[1] ] = 0;
 
+
   while (i > 0) {
-    scores[compareColors(pixels[i++], pixels[i++], pixels[i++])] += 1;
+    rgb = [pixels[i++], pixels[i++], pixels[i++]]
+    whoseDot = compareColors(rgb);
+    if (whoseDot == COLORS[0]) {
+      scores[ COLORS[0] ] += 1;
+    } else if (whoseDot == COLORS[1]) {
+      scores[ COLORS[1] ] += 1;
+    }
     i++;
   }
 
@@ -174,4 +180,34 @@ function calculatePixels() {
 
   
 }
+
+function colorDistance(rgb_1, rgb_2) {
+  dx = rgb_1[0] - rgb_2[0];
+  dy = rgb_1[1] - rgb_2[1];
+  dz = rgb_1[2] - rgb_2[2];
+
+  return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
+}
+
+function compareColors(rgb) {
+
+  distanceToOne = colorDistance(rgb, COLORS_RGB[0]);
+  distanceToTwo = colorDistance(rgb, COLORS_RGB[1]);
+  distanceToWhite = colorDistance(rgb, [255, 255, 255]);
+
+  if (distanceToWhite < distanceToTwo && distanceToWhite < distanceToOne) {
+    return null;
+  } else if (distanceToTwo > distanceToWhite) {
+    return COLORS[0];
+  } else {
+    return COLORS[1];
+  }
+
+}
+
+
+  
+  
+  
+
 /* }}} */
