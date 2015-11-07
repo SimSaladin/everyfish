@@ -8,10 +8,6 @@
  * @param uniform {Boolean} uniform distribution of tips
 */
 function bezierSplat(params) {
-
-   var data = getPositions(params.position, params.radius,
-         params.tipNo, params.offsetCoef, params.symmetry);
-
    var randomN = function (n) {
       return Math.floor((Math.random() * n) + 1);
    };
@@ -71,6 +67,10 @@ function bezierSplat(params) {
 
       return positions;
    };
+
+
+   var data = getPositions(params.position, params.radius,
+         params.tipNo, params.offsetCoef, params.symmetry);
 
    /* Get the fixed create.js shape for
     * your splat.
