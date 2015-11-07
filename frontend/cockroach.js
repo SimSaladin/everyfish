@@ -1,8 +1,8 @@
 
 // Takes starting position and starting angle (in degrees)
-function createCockroach(stage, x, y, angle, turnSpeedCoeff) {
+function createCockroach(stage, x, y, angle, turnSpeedCoeff, speed) {
   if (!turnSpeedCoeff) turnSpeedCoeff = 0.001;
-  var speed = 4;
+  if (!speed) speed = 4;
 
   var runner = new createjs.Sprite(cockroachSheet, "run");
   runner.framerate = 18;
