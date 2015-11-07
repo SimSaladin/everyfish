@@ -15,25 +15,57 @@ var splashes = [];
 
 var color; // The color of our splashes
 
-// splat appearance animation
-var animation = {
-   initialParameters: function (x, y, scaler) {
-      this.x = (1 - scaler) * x;
-      this.y = (1 - scaler) * y;
-      this.scaleX = scaler;
-      this.scaleY = scaler;
-      this.alpha = 0;
-   },
-   targetParameters: {
-      x: -20,
-      y: -20,
-      scaleX: 1.0,
-      scaleY: 1.0,
-      alpha: 1
-   },
-   duration: 1000,
-   ease: createjs.Ease.getPowInOut(4)
+/* {{{ utility */
+var Simple1DNoise = function() {
+    var MAX_VERTICES = 256;
+    var MAX_VERTICES_MASK = MAX_VERTICES -1;
+    var amplitude = 1;
+    var scale = 1;
+
+    var r = [];
+
+    for ( var i = 0; i < MAX_VERTICES; ++i ) {
+        r.push(Math.random());
+    }
+
+    var getVal = function( x ){
+        var scaledX = x * scale;
+        var xFloor = Math.floor(scaledX);
+        var t = scaledX - xFloor;
+        var tRemapSmoothstep = t * t * ( 3 - 2 * t );
+
+        /// Modulo using &
+        var xMin = xFloor & MAX_VERTICES_MASK;
+        var xMax = ( xMin + 1 ) & MAX_VERTICES_MASK;
+
+        var y = lerp( r[ xMin ], r[ xMax ], tRemapSmoothstep );
+
+        return y * amplitude;
+    };
+
+    /**
+    * Linear interpolation function.
+    * @param a The lower integer value
+    * @param b The upper integer value
+    * @param t The value between the two
+    * @returns {number}
+    */
+    var lerp = function(a, b, t ) {
+        return a * ( 1 - t ) + b * t;
+    };
+
+    // return the API
+    return {
+        getVal: getVal,
+        setAmplitude: function(newAmplitude) {
+            amplitude = newAmplitude;
+        },
+        setScale: function(newScale) {
+            scale = newScale;
+        }
+    };
 };
+/* }}} */
 
 /* {{{ Start, play, end */
 
@@ -147,6 +179,26 @@ function getCanvasCoords(event) {
 /* }}} */
 
 /* {{{ Animations */
+
+// splat appearance animation
+var animation = {
+   initialParameters: function (x, y, scaler) {
+      this.x = (1 - scaler) * x;
+      this.y = (1 - scaler) * y;
+      this.scaleX = scaler;
+      this.scaleY = scaler;
+      this.alpha = 0;
+   },
+   targetParameters: {
+      x: -20,
+      y: -20,
+      scaleX: 1.0,
+      scaleY: 1.0,
+      alpha: 1
+   },
+   duration: 1000,
+   ease: createjs.Ease.getPowInOut(4)
+};
 
 function animateShape(stage, shape, coords) {
    shape.set(animation.initialParameters(coords.x, coords.y, 0.5));
