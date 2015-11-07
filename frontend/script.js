@@ -150,6 +150,9 @@ function animateShape(stage, shape, coords) {
       .to(animation.targetParameters, animation.duration, animation.ease);
 }
 
+function colorDistance(rgb) {
+   
+
 /* }}} */
 
 /* {{{ Winner calculation */
