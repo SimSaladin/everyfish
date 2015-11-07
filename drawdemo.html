@@ -219,9 +219,20 @@ function canvasRightClick(stage, event) {
 function init() {
   var stage = new createjs.Stage("main");
 
-  createjs.Ticker.setFPS(60);
-  createjs.Ticker.addEventListener("tick", stage);
-
+  // load cockroach animation
+  var cockroachData = {
+    images: ["cockroach.png"],
+    frames: {width:175, height:207},
+    animations: {
+      run: [0,1]
+    }
+  };
+  var cockroachSheet = new createjs.SpriteSheet(cockroachData);
+  var runner1 = new createjs.Sprite(cockroachSheet, "run");
+  runner1.setTransform(200,200);
+  runner1.framerate = 20;
+  stage.addChild(runner1);
+  stage.update();
   //drawLineSplat(stage, 100, 200, "red", Math.PI, 50);
   //drawLineSplat(stage, 250, 200, "red", Math.PI, 100);
   //drawLineSplat(stage, 400, 200, "red", Math.PI, 200);
@@ -231,6 +242,10 @@ function init() {
   gCanvasElement.on("click", function(e) {canvasClick(stage, e)});
   // right click, disable contextmenu, do a click instead
   gCanvasElement.on("contextmenu", function(e) { canvasRightClick(stage, e); return false; });
+
+  createjs.Ticker.setFPS(60);
+  createjs.Ticker.addEventListener("tick", stage);
+
 }
       </script>
    </head>
