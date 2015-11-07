@@ -9,10 +9,10 @@ because it is rather stupid
 ## TODO
 
 - The cockroaches:
-  - animations, done
+  - ~~animations~~
   - random walk
-- Game start and end
-- Different colors for different players
+- Game ~~start~~ and end
+- ~~Different colors for different players~~
 - Scoring: controlled area, number of killed cockroaches, what else? style
   points?
 - Prettier splats (animated)
