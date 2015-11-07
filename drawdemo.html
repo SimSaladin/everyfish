@@ -120,19 +120,24 @@ function getCanvasCoords(event) {
   return {'x': x, 'y': y};
 }
 
-
-function init() {
-  var stage = new createjs.Stage("main");
-  gCanvasElement.on("click", function(event) {
+function canvasClick(stage, event) {
     var coords = getCanvasCoords(event); 
     console.log(event);
     console.log(coords);
     drawRoundSplat(stage, coords.x, coords.y, "red");
-  });
+}
+
+function init() {
+  var stage = new createjs.Stage("main");
+
+  // left click
+  gCanvasElement.on("click", function(e) {canvasClick(stage, e)});
+  // right click, disable contextmenu, do a click instead
+  gCanvasElement.on("contextmenu", function(e) {canvasClick(stage, e); return false;});
 }
       </script>
    </head>
    <body onload="init();">
-      <canvas id="main" width="600" height="500"></canvas>
+      <canvas id="main" width="800" height="550" style="border: 2px solid"></canvas>
    </body>
 </html>
