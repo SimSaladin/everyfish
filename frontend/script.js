@@ -1,3 +1,4 @@
+// vim:foldmethod=marker:foldlevel=0
 var socket = io();
 
 var CANVAS_WIDTH = 800, CANVAS_HEIGHT = 550;
@@ -28,6 +29,8 @@ var animation = {
    ease: createjs.Ease.getPowInOut(4)
 };
 
+/* {{{ Start, play, end */
+
 jQuery(function(){
   console.log("ready");
   canvas = jQuery("#main");
@@ -54,6 +57,11 @@ function waitingForPlayers(){
 
 function startGame(c){
   color = c;
+
+  indicator = new createjs.Shape();
+  indicator.graphics.beginFill(c).drawRect(0,0,CANVAS_WIDTH,9);
+  stage.addChild(indicator);
+
   stage.removeChild(infoBlock);
   socket.on("splash", function(msg){
 
@@ -85,6 +93,8 @@ function startGame(c){
 function endGame(){
 }
 
+/* }}} */
+
 /* {{{ Input */
 
 // Build the shape based on the kind of the click
@@ -115,6 +125,10 @@ function getCanvasCoords(event) {
   
   return {'x': x, 'y': y};
 }
+
+/* }}} */
+
+/* {{{ Animations */
 
 function animateShape(stage, shape, coords) {
    shape.set(animation.initialParameters(coords.x, coords.y, 0.5));
