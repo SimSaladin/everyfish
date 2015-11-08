@@ -172,16 +172,30 @@ Math.randomFromInterval = function (min, max) {
 
 function endGame(){
    var positions,
+       title,
        information,
        effects;
    var i, safeDist = 100,
-       effectsAmount = 2;
+       effectsAmount = 2,
+       output;
 
    effects = new Array(effectsAmount);
    positions = new Array(effectsAmount);
+
+   output = scores[COLORS[0]] + " - " + scores[COLORS[1]];
    
-   information = new createjs.Text("The end!", 
+   /* create the texts */
+   title = new createjs.Text("The end!", 
          "20px Arial", "#ff7700");
+   title.textAlign = "center";
+   title.x = CANVAS_WIDTH / 2;
+   title.y = CANVAS_HEIGHT / 2;
+
+   information = new createjs.Text(output,
+         "15px Arial", "#ff7700");
+   information.textAlign = "center";
+   information.x = CANVAS_WIDTH / 2;
+   information.y = CANVAS_HEIGHT / 2 + 20;
 
    /* randomize positions */
    for (i = 0; i < effectsAmount; i++) {
@@ -192,24 +206,24 @@ function endGame(){
             safeDist, CANVAS_HEIGHT - safeDist);
    };
 
+   /* create the splats */
+   effects[0] = splat.createDefaultLine(
+         color, positions[0], 200, Math.PI, Math.floor(Math.random() * 1000) + 1);
+   effects[1] = splat.createDefaultRound(
+         color, positions[1], Math.floor(Math.random() * 1000) + 1);
+
    console.log(positions);
 
-   effects[0] = splat.createDefaultLine(
-         color, positions[0], 200, Math.PI);
-   effects[1] = splat.createDefaultRound(
-         color, positions[1]);
-
+   /* remove old children */
    stage.removeAllChildren();
 
    effects.forEach(function (element, index) {
       animateShape(stage, element, positions[index]);
    });
 
-   console.log(effects.length);
-
-   information.x = 200;
-   information.y = 150;
+   stage.addChild(title);
    stage.addChild(information);
+   stage.update();
 }
 
 /* }}} */

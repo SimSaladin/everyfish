@@ -27,8 +27,8 @@ splat.bezierDefaultParams = {
 
 /* {{{ roundsplat and linesplat */
 
-splat.createDefaultLine = function (color, pos, length, angle) {
-   var splatShape = getLineSplat(pos.x, pos.y, color, angle, length);
+splat.createDefaultLine = function (color, pos, length, angle, seed) {
+   var splatShape = getLineSplat(pos.x, pos.y, color, angle, length, seed);
    return splatShape;
 }
 

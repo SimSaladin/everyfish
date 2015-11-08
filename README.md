@@ -11,7 +11,7 @@ because it is rather stupid
 - ~~The cockroaches~~:
   - ~~animations~~
   - ~~random walk~~
-- Game ~~start~~ and end
+- Game ~~start~~ and ~~end~~
 - ~~Different colors for different players~~
 - Scoring: controlled area, number of killed cockroaches, what else? style
   points?
