@@ -71,6 +71,7 @@ io.on('connection', function(socket){
     roaches = [];
     for (s in sockets) startGame(sockets[s], colors[s]);
 
+    if (intervalid != null) clearInterval(intervalid);
     intervalid = setInterval(updateGame, 1000);
   };
 });
@@ -116,21 +117,23 @@ function updateGame() {
   t = 0;
   for (x in splashes) t += splashes[x].length;
 
-  console.log(t, splashes);
-
   if (roachCapacityReached && roaches.length == t ) {
     io.sockets.emit("end", "");
-  }
-
-  if (Math.random() <= 0.5 && roachesPerPlayer[0] < roachPerPlayer) {
-    oneOrTwo = 1;
-    roachesPerPlayer[0] += 1;
-  } else if (roachesPerPlayer[1] < roachPerPlayer) {
-    oneOrTwo = 2;
-    roachesPerPlayer[1] += 1;
+    clearInterval(intervalid);
+    intervalid = null;
   }
 
   if (roachCreated) {
+
+    if (Math.random() <= 0.5 && roachesPerPlayer[0] < roachPerPlayer) {
+      oneOrTwo = 1;
+      roachesPerPlayer[0] += 1;
+    } else if (roachesPerPlayer[1] < roachPerPlayer) {
+      oneOrTwo = 2;
+      roachesPerPlayer[1] += 1;
+    }
+
+    console.log(oneOrTwo, roachesPerPlayer);
     if(oneOrTwo == 1) {
       roachPos = [5, Math.random() * CANVAS_HEIGHT];
       roachAngle = Math.random() * 180 + 180;

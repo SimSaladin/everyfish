@@ -180,8 +180,10 @@ function startGame(c){
 
   socket.on("roach", function(data) {
     var color = data.player == 1 ? "green" : "blue";
+    console.log(color);
     roach = createCockroach(stage, data.seed, data.x, data.y, data.angle, color);
     roaches[roach.id] = roach;
+    roaches[roach.id].data = data;
   });
 
   // Click listeners
@@ -271,6 +273,7 @@ function canvasClick(stage, event) {
     hits.map(function(hit){
       s = splatGenerator();
       s.data.roach_id = hit.id;
+      s.data.color = COLORS[hit.data.player-1];
       s.add();
     });
 }
