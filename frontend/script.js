@@ -155,21 +155,23 @@ function startGame(c){
 
   stage.removeChild(infoBlock);
   socket.on("splash", function(msg){
-
     var splash;
     var shape = new createjs.Shape();
     var json = JSON.parse(msg);
+
     switch(json.type) {
 
       case "BezierSplat":
         splash = new BezierSplat({ coords: json.data.coords, radius: json.data.radius });
         shape = splat.createBezier(json.data.color, json.data.coords, json.data.radius);
+        console.log("received bezier");
         break;
 
       case "RoundSplat":
         splash = new RoundSplat({ coords: json.data.coords, radius: json.data.radius });
         shape = splat.createRound(json.data.color, json.data.coords, json.data.seed,
               json.data.radius);
+        console.log("received round");
         break;
     }
 
@@ -261,7 +263,7 @@ function canvasEvent(stage, event) {
     var coords = getCanvasCoords(event); 
 
     hits = checkHits(coords);
-    // if (hits.length == 0) return false;
+    if (hits.length == 0) return false;
 
     var splatGenerator;
     switch (event.type) {
@@ -276,11 +278,11 @@ function canvasEvent(stage, event) {
              // bezier
              splatGenerator = function() { return new BezierSplat(
                    { coords: coords, radius: value * 30 }) };
-             console.log("bezier");
+             console.log("sent bezier");
           } else {
              splatGenerator = function() { return new RoundSplat(
                    { coords: coords, radius: 15 + 2 * value }) };
-             console.log("round");
+             console.log("sent round");
           }
        
           break;
@@ -364,6 +366,7 @@ function animateShape(stage, shape, coords) {
    // move to background
    stage.setChildIndex(shape, splashes.length-1);
 
+   stage.update();
    createjs.Tween.get(shape, { loop: false })
       .to(new animation.targetParameters(coords.x, coords.y, 1.1), 
             animation.duration, animation.ease);
