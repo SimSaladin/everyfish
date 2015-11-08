@@ -11,8 +11,10 @@ var socket_count = 0 // only increased atm
 var sockets = {} // socket.id -> socket
 var colors = {} // socket -> splash color
 var splashes = {} // socket -> list of splashes
-var roaches = {} // counts the number of roaches per player created
+var roachesPerPlayer = {} // counts the number of roaches per player created
+var roaches = {}
 var intervalid = {};
+var curUnic = {};
 
 /* {{{ Routes */
 app.get('/', function(req, res){
@@ -60,7 +62,9 @@ io.on('connection', function(socket){
 });
 
 function startGame(socket, color){
-  roaches = [0, 0]
+  curUnic = 0;
+  roachesPerPlayer = [0, 0];
+  roaches = [];
   console.log("starting game");
   for (var c in splashes) {
     console.log(c, splashes[c]);
@@ -83,15 +87,27 @@ function startGame(socket, color){
 
 }
 
+function nextUnicId() {
+  curUnic += 1;
+  return curUnic;
+}
+
 function updateGame() {
   // create roach pos & seed here
-  roachCreated = Math.random () < roachDensity;
-  if (Math.random() <= 0.5 && roaches[0] < roachPerPlayer) {
+  if (roaches.length() < 2 * roachPerPlayer) {
+    roachCreated = Math.random () < roachDensity;
+    roachId = nextUnicId();
+    roaches.push(roachId);
+  } else {
+    roachCreated = false;
+  }
+
+  if (Math.random() <= 0.5 && roachesPerPlayer[0] < roachPerPlayer) {
     oneOrTwo = 1;
-    roaches[0] += 1;
-  } else if (roaches[1] < roachPerPlayer) {
+    roachesPerPlayer[0] += 1;
+  } else if (roachesPerPlayer[1] < roachPerPlayer) {
     oneOrTwo = 2;
-    roaches[1] += 1;
+    roachesPerPlayer[1] += 1;
   }
 
   if (roachCreated) {
@@ -105,7 +121,7 @@ function updateGame() {
 
     roachSeed = Math.random() * 2*Math.PI;
   
-    io.sockets.emit('roach', {x : roachPos[0], y : roachPos[1], seed : roachSeed, angle : roachAngle, player : oneOrTwo});
+    io.sockets.emit('roach', {x : roachPos[0], y : roachPos[1], seed : roachSeed, angle : roachAngle, player : oneOrTwo, id : roachId});
   }
 
 }
