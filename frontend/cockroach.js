@@ -1,9 +1,9 @@
 
 // Takes starting position and starting angle (in degrees), color is either "green" or "blue"
 function createCockroach(stage, seed, x, y, angle, color, turnSpeedCoeff, speed) {
-  random = Math.seed(seed);
+  var random = Math.seed(seed);
   if (!turnSpeedCoeff) turnSpeedCoeff = 0.001;
-  if (!speed) speed = 4;
+  if (!speed) speed = 0.3;
 
   var runner = new createjs.Sprite(cockroachSheet, color);
   runner.framerate = 18;
@@ -25,11 +25,12 @@ function createCockroach(stage, seed, x, y, angle, color, turnSpeedCoeff, speed)
   gameFieldBoundary.height += 2*hiddenMargin;
 
   // Move logic
+  var randomStart = 1;
   createjs.Ticker.addEventListener("tick", function(e) {
-    runner.rotation = wanderNoise.getVal(e.timeStamp * turnSpeedCoeff) * 360;
+    runner.rotation = wanderNoise.getVal((randomStart += e.delta) * turnSpeedCoeff) * 360;
     var curRotRad = (runner.rotation - 90) * Math.PI / 180 ; // fix opposite orientation of image
-    runner.x = runner.x + Math.cos(curRotRad) * speed;
-    runner.y = runner.y + Math.sin(curRotRad) * speed;
+    runner.x = runner.x + Math.cos(curRotRad) * speed * e.delta;
+    runner.y = runner.y + Math.sin(curRotRad) * speed * e.delta;
 
     var bounds = runner.getBounds();
     bounds.x = runner.x;

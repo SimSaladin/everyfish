@@ -210,6 +210,7 @@ function startGame(c){
   socket.on("roach", function(data) {
     var color = data.player == 1 ? "green" : "blue";
     console.log(color);
+    console.log(data);
     var roach = createCockroach(stage, data.seed, data.x, data.y, data.angle, color);
     roaches[roach.id] = roach;
     roaches[roach.id].data = data;
@@ -380,7 +381,7 @@ function canvasEvent(stage, event) {
              console.log("sent bezier");
           } else {
              splatGenerator = function(splatPoint) { return new RoundSplat(
-                   { coords: splatPoint, radius: 30 + (value - 2) / 5 * 19, seed: Math.random() }) };
+                   { coords: splatPoint, radius: 30 + (value - 2) / 5 * 20, seed: Math.random() }) };
              console.log("sent bezier");
           }
        
