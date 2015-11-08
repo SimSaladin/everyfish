@@ -279,12 +279,12 @@ function canvasEvent(stage, event) {
           var value = alt << 2 | shift << 1 | ctrl; 
           if (value < 2) {
              // bezier
-             splatGenerator = function() { return new BezierSplat(
-                   { coords: coords, radius: 20 + value * 10, seed: Math.random() }) };
+             splatGenerator = function(splatPoint) { return new BezierSplat(
+                   { coords: splatPoint, radius: 20 + value * 10, seed: Math.random() }) };
              console.log("sent bezier");
           } else {
-             splatGenerator = function() { return new RoundSplat(
-                   { coords: coords, radius: 30 + (value - 2) / 5 * 19, seed: Math.random() }) };
+             splatGenerator = function(splatPoint) { return new RoundSplat(
+                   { coords: splatPoint, radius: 30 + (value - 2) / 5 * 19, seed: Math.random() }) };
              console.log("sent bezier");
           }
        
@@ -294,7 +294,7 @@ function canvasEvent(stage, event) {
     }
 
     hits.map(function(hit){
-      var s = splatGenerator();
+      var s = splatGenerator({x:hit.x, y:hit.y});
       s.data.roach_id = hit.id;
       s.data.color = COLORS[hit.data.player-1];
       s.add();
