@@ -282,7 +282,7 @@ function canvasEvent(stage, event) {
              console.log("sent bezier");
           } else {
              splatGenerator = function() { return new RoundSplat(
-                   { coords: coords, radius: 25 + 10 * value, seed: Math.random() }) };
+                   { coords: coords, radius: 25 + 4 * value, seed: Math.random() }) };
              console.log("sent bezier");
           }
        
