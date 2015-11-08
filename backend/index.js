@@ -44,6 +44,10 @@ app.get("/fist.cur", function(req, res){
 app.get("/share.js", function(req, res){
   res.sendFile('share.js', {'root': '../'});
 });
+app.get("/bg.jpg", function(req, res){
+  res.sendFile('frontend/bg.jpg', {'root': '../'});
+});
+
 /* }}} */
 
 io.on('connection', function(socket){
