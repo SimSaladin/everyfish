@@ -149,12 +149,12 @@ function startGame(c){
     switch(json.type) {
 
       case "BezierSplat":
-        splash = new BezierSplat(json.data);
+        splash = new BezierSplat(json.data.coords);
         shape = splat.createDefaultBezier(json.data.color, json.data.coords);
         break;
 
       case "RoundSplat":
-        splash = new RoundSplat(json.data);
+        splash = new RoundSplat(json.data.coords);
         shape = splat.createDefaultRound(json.data.color, json.data.coords, json.data.seed);
         break;
     }
@@ -295,34 +295,36 @@ function getCanvasCoords(event) {
 /* {{{ Animations */
 
 // splat appearance animation
+/* TOUCH THIS WITH YOUR OWN RISK */
 var animation = {
-   initialParameters: function (x, y, scaler) {
+   initialParameters: function (x, y) {
+      this.x = 0.8 * x;
+      this.y = 0.8 * y;
+      this.scaleX = 0.2;
+      this.scaleY = 0.2;
+      this.alpha = 0;
+   },
+   targetParameters: function (x, y, scaler) {
       this.x = (1 - scaler) * x;
       this.y = (1 - scaler) * y;
       this.scaleX = scaler;
       this.scaleY = scaler;
-      this.alpha = 0;
+      this.alpha = 1;
    },
-   targetParameters: {
-      x: -20,
-      y: -20,
-      scaleX: 1.0,
-      scaleY: 1.0,
-      alpha: 1
-   },
-   duration: 1000,
+   duration: 400,
    ease: createjs.Ease.getPowInOut(4)
 };
 
 function animateShape(stage, shape, coords) {
-   shape.set(animation.initialParameters(coords.x, coords.y, 0.5));
+   shape.set(new animation.initialParameters(coords.x, coords.y));
    stage.addChild(shape);
 
    // move to background
    stage.setChildIndex(shape, splashes.length);
 
    createjs.Tween.get(shape, { loop: false })
-      .to(animation.targetParameters, animation.duration, animation.ease);
+      .to(new animation.targetParameters(coords.x, coords.y, 1.1), 
+            animation.duration, animation.ease);
 }
 
 /* }}} */
