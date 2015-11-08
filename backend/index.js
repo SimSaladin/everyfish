@@ -61,18 +61,21 @@ io.on('connection', function(socket){
     console.log('user disconnected');
     delete splashes[socket.id];
     clearInterval(intervalid);
+    io.sockets.sockets.forEach(function(s){ s.disconnect(true); });
   });
 
   if (Object.keys(splashes).length >= 2) {
+    console.log("starting game");
+    curUnic = 0;
+    roachesPerPlayer = [0, 0];
+    roaches = [];
     for (s in sockets) startGame(sockets[s], colors[s]);
+
+    intervalid = setInterval(updateGame, 1000);
   };
 });
 
 function startGame(socket, color){
-  curUnic = 0;
-  roachesPerPlayer = [0, 0];
-  roaches = [];
-  console.log("starting game");
   for (var c in splashes) {
     console.log(c, splashes[c]);
     for (var i in splashes[c]) {
@@ -83,14 +86,15 @@ function startGame(socket, color){
   };
 
   socket.on('splash', function(msg){
-    console.log(msg);
-    splashes[socket.id] = (splashes[socket.id] || []).concat([msg]);
+    splash = JSON.parse(msg);
+    roach_id = splash.data.roach_id;
+    console.log("DIEEEEEEEE", roach_id);
+    delete roaches[roach_id];
+    splashes[socket.id] = (splashes[socket.id] || []).concat([splash]);
     io.sockets.emit('splash', msg);
   });
 
   socket.emit('start', color);
-
-  intervalid = setInterval(updateGame, 1000);
 
 }
 

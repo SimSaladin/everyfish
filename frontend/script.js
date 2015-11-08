@@ -11,6 +11,7 @@ var canvas, stage;
 var infoBlock;
 var scoreBlock = {};
 var scores = {};
+var roaches = {};
 
 var splashes = [];
 
@@ -27,6 +28,10 @@ Math.seed = function(s) {
       return function() {
                 s = Math.sin(s) * 10000; return s - Math.floor(s);
                     };
+};
+
+Math.randomFromInterval = function (min, max) {
+   return Math.floor(Math.random() * (max - min)) + min;  
 };
 
 var Simple1DNoise = function(random) {
@@ -91,6 +96,11 @@ jQuery(function(){
     console.log("socket.io connected");
   });
 
+  socket.on("disconnect", function (s) {
+    infoBlock.text = "Disconnected from server, please refresh";
+    stage.addChild(infoBlock);
+  });
+
   socket.on("start", startGame);
 
   createjs.Ticker.setFPS(60);
@@ -106,8 +116,6 @@ jQuery(function(){
       run: [0,1]
     }
   });
-
-  window.setTimeout(calculatePixels, 500);
 });
 
 function waitingForPlayers(){
@@ -152,11 +160,15 @@ function startGame(c){
     }
 
     splashes.concat([splash]);
+    stage.removeChild(roaches[json.data.roach_id]);
+    delete roaches[json.data.roach_id];
+    console.log(json.data.roach_id);
     animateShape(stage, shape, splash.data.coords);
   });
 
   socket.on("roach", function(data) {
-    createCockroach(stage, data.seed, data.x, data.y, data.angle);
+    roach = createCockroach(stage, data.seed, data.x, data.y, data.angle);
+    roaches[roach.id] = roach;
   });
 
   // Click listeners
@@ -166,10 +178,6 @@ function startGame(c){
   
   stage.update();
 }
-
-Math.randomFromInterval = function (min, max) {
-   return Math.floor(Math.random() * (max - min)) + min;  
-};
 
 function endGame(){
    var positions,
@@ -235,14 +243,33 @@ function endGame(){
 function canvasClick(stage, event) {
     var coords = getCanvasCoords(event); 
 
+    hits = checkHits(coords);
+    if (hits.length == 0) return false;
+
+    var splatGenerator;
     switch (event.type) {
        case "click":
-          (new RoundSplat(coords)).add();
+          splatGenerator = function() { return new RoundSplat(coords); };
           break;
        case "contextmenu":
-          (new BezierSplat(coords)).add();
+          splatGenerator = function() { return new BezierSplat(coords) };
           break;
     }
+
+    hits.map(function(hit){
+      s = splatGenerator();
+      s.data.roach_id = hit.id;
+      s.add();
+    });
+}
+
+// list of roaches hit by hitting at argument.
+function checkHits(coords) {
+  hits = Object.values(roaches).filter(function(x){
+    return Math.abs(x.x - coords.x) + Math.abs(x.y - coords.y) < 85;
+  });
+  console.log("hits", hits);
+  return hits;
 }
 
 function getCanvasCoords(event) {
@@ -345,10 +372,5 @@ function compareColors(rgb) {
 
   return null;
 }
-
-
-  
-  
-  
 
 /* }}} */
