@@ -194,7 +194,7 @@ function startGame(c){
   canvas.on("click", function(e){ canvasEvent(stage, e); });
   // right click, disable contextmenu, do a click instead
   canvas.on("contextmenu", function(e){ canvasEvent(stage, e); return false });
-  
+
   stage.update();
 }
 
@@ -282,7 +282,7 @@ function canvasEvent(stage, event) {
              console.log("sent bezier");
           } else {
              splatGenerator = function() { return new RoundSplat(
-                   { coords: coords, radius: 15 + 2 * value, seed: Math.random() }) };
+                   { coords: coords, radius: 25 + 10 * value, seed: Math.random() }) };
              console.log("sent bezier");
           }
        
