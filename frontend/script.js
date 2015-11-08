@@ -4,6 +4,7 @@ var socket = io();
 var CANVAS_WIDTH = 800, CANVAS_HEIGHT = 550;
 var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must be same in frontend/script.js
 var COLORS_RGB = [[133, 255, 0], [0, 184, 255]]
+var colorThreshold = 100;
 
 
 var canvas, stage;
@@ -312,7 +313,10 @@ function calculatePixels() {
   while (i > 0) {
     if (pixels[i--] == 0) continue;
     rgb = [pixels[i--], pixels[i--], pixels[i--]].reverse();
-    scores[ compareColors(rgb) ] += 1;
+    comp = compareColors(rgb);
+    if(comp != null) {
+      scores[ compareColors(rgb) ] += 1;
+    }
   }
 
   scoreBlock[ COLORS[0] ].text = "Score " + scores[ COLORS[0] ];
@@ -333,7 +337,13 @@ function compareColors(rgb) {
   distanceToOne = colorDistance(rgb, COLORS_RGB[0]);
   distanceToTwo = colorDistance(rgb, COLORS_RGB[1]);
 
-  return (distanceToTwo > distanceToOne) ? COLORS[0] : COLORS[1];
+  if (distanceToTwo > distanceToOne) {
+    if(distanceToOne < colorThreshold) { return COLORS[0] }
+  } else {
+    if(distanceToTwo < colorThreshold) { return COLORS[1] }
+  }
+
+  return null;
 }
 
 
