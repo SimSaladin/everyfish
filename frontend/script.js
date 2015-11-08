@@ -122,6 +122,7 @@ function initialize() {
   });
 
   socket.on("start", startGame);
+  socket.on("end", endGame);
 
   createjs.Ticker.setFPS(60);
   createjs.Ticker.addEventListener("tick", stage);
@@ -174,7 +175,6 @@ function startGame(c){
     splashes.concat([splash]);
     stage.removeChild(roaches[json.data.roach_id]);
     delete roaches[json.data.roach_id];
-    console.log(json.data.roach_id);
     animateShape(stage, shape, splash.data.coords);
   });
 
@@ -193,6 +193,7 @@ function startGame(c){
 }
 
 function endGame(){
+  calculatePixels();
    var positions,
        title,
        information,
@@ -233,8 +234,6 @@ function endGame(){
          color, positions[0], 200, Math.PI, Math.floor(Math.random() * 1000) + 1);
    effects[1] = splat.createDefaultRound(
          color, positions[1], Math.floor(Math.random() * 1000) + 1);
-
-   console.log(positions);
 
    /* remove old children */
    stage.removeAllChildren();
@@ -281,7 +280,6 @@ function checkHits(coords) {
   hits = Object.values(roaches).filter(function(x){
     return Math.abs(x.x - coords.x) + Math.abs(x.y - coords.y) < 85;
   });
-  console.log("hits", hits);
   return hits;
 }
 

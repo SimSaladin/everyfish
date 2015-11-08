@@ -89,7 +89,6 @@ function startGame(socket, color){
     splash = JSON.parse(msg);
     roach_id = splash.data.roach_id;
     console.log("DIEEEEEEEE", roach_id);
-    delete roaches[roach_id];
     splashes[socket.id] = (splashes[socket.id] || []).concat([splash]);
     io.sockets.emit('splash', msg);
   });
@@ -106,11 +105,21 @@ function nextUnicId() {
 function updateGame() {
   // create roach pos & seed here
   roachCreated = Math.random () < roachDensity;
-  if (roaches.length < 2 * roachPerPlayer && roachCreated) {
+  roachCapacityReached = roaches.length >= 2 * roachPerPlayer;
+  if (!roachCapacityReached && roachCreated) {
     roachId = nextUnicId();
     roaches.push(roachId);
   } else {
     roachCreated = false;
+  }
+
+  t = 0;
+  for (x in splashes) t += splashes[x].length;
+
+  console.log(t, splashes);
+
+  if (roachCapacityReached && roaches.length == t ) {
+    io.sockets.emit("end", "");
   }
 
   if (Math.random() <= 0.5 && roachesPerPlayer[0] < roachPerPlayer) {
