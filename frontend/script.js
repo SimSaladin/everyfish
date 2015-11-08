@@ -393,6 +393,16 @@ function canvasEvent(stage, event) {
     if (event.type == "click" || mouse.isDown);
     canvasDom.requestPointerLock();
 
+    // before hit check
+    switch (event.type) {
+     case "mousedown":
+        mouse.isDown = true;
+     case "mouseup":
+        //mouse.isDown = false;
+    }
+
+    if (event.type == "click" || mouse.isDown) return false;
+
     var hits = checkHits(mouse);
     if (hits.length == 0) return false;
 
