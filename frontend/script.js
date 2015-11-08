@@ -132,7 +132,6 @@ function initialize() {
 
   console.log("ready");
 
-  canvasDom.requestPointerLock();
 
   socket.on("connect", function (s) {
     console.log("socket.io connected");
@@ -367,6 +366,7 @@ function moveCallback(e) {
 function canvasEvent(stage, event) {
     var coords = getCanvasCoords(event); 
 
+    canvasDom.requestPointerLock();
 
     var hits = checkHits(mouse);
     if (hits.length == 0) return false;
