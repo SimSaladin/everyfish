@@ -110,7 +110,7 @@ jQuery(function(){
 
   stage = new createjs.Stage("main");
 
-  mouse.bitmap = new createjs.Bitmap("fist.jpg");
+  mouse.bitmap = new createjs.Bitmap("fist.png");
   
   // load cockroach animation
   cockroachSheet = new createjs.SpriteSheet( {
