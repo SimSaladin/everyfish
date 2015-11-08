@@ -387,8 +387,8 @@ function calculatePixels() {
 
   while (i > 0) {
     if (pixels[i--] == 0) continue;
-    rgb = [pixels[i--], pixels[i--], pixels[i--]].reverse();
-    comp = compareColors(rgb);
+    var rgb = [pixels[i--], pixels[i--], pixels[i--]].reverse();
+    var comp = compareColors(rgb);
     if(comp != null) {
       scores[ compareColors(rgb) ] += 1;
     }
@@ -400,17 +400,17 @@ function calculatePixels() {
 }
 
 function colorDistance(rgb_1, rgb_2) {
-  dx = rgb_1[0] - rgb_2[0];
-  dy = rgb_1[1] - rgb_2[1];
-  dz = rgb_1[2] - rgb_2[2];
+  var dx = rgb_1[0] - rgb_2[0];
+  var dy = rgb_1[1] - rgb_2[1];
+  var dz = rgb_1[2] - rgb_2[2];
 
   return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2) + Math.pow(dz, 2));
 }
 
 function compareColors(rgb) {
 
-  distanceToOne = colorDistance(rgb, COLORS_RGB[0]);
-  distanceToTwo = colorDistance(rgb, COLORS_RGB[1]);
+  var distanceToOne = colorDistance(rgb, COLORS_RGB[0]);
+  var distanceToTwo = colorDistance(rgb, COLORS_RGB[1]);
 
   if (distanceToTwo > distanceToOne) {
     if(distanceToOne < colorThreshold) { return COLORS[0] }
