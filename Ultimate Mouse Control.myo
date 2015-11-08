@@ -155,22 +155,18 @@ function onPeriodic()
         myo.debug(scale)
         if (scale == 0) then
           myo.mouse("left", "click");
-          myo.debug("click")
         elseif (scale == 1) then
-          myo.mouse("left", "click", "shift");
-          myo.debug("click")
-        elseif (scale == 2) then
           myo.mouse("left", "click", "control");
-          myo.debug("click")
+        elseif (scale == 2) then
+          myo.mouse("left", "click", "shift");
         elseif (scale == 3) then
-          myo.mouse("left", "click", "alt");
-          myo.debug("click")
-        elseif (scale == 4) then
           myo.mouse("left", "click", "shift", "control");
+        elseif (scale == 4) then
+          myo.mouse("left", "click", "alt");
         elseif (scale == 5) then
-          myo.mouse("left", "click", "shift", "alt");
-        elseif (scale == 6) then
           myo.mouse("left", "click", "control", "alt");
+        elseif (scale == 6) then
+          myo.mouse("left", "click", "shift", "alt");
         end
      end
 
