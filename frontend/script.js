@@ -7,7 +7,7 @@ var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must 
 var COLORS_RGB = [[133, 255, 0], [0, 184, 255]]
 var colorThreshold = 100;
 
-var HITBOX = 100;
+var HITBOX = 120;
 
 
 var canvas, stage;
