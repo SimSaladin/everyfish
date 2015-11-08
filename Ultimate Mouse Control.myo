@@ -14,8 +14,8 @@ scrolling = 0
 lastScrollTime = 0
 wasActive = false
 
-accmax = -1
-accmin = -2.2
+accmax = -0.8
+accmin = -3
 accinterval = math.abs(accmax-accmin)/6;
 
 description = [[  
@@ -90,8 +90,8 @@ function freePosition(edge)
 end
 
  STANDARD_BINDINGS = {
-    fist            = lockPosition,
-    fingersSpread   = freePosition,
+    fist            = freePosition,
+    fingersSpread   = lockPosition,
     doubleTap       = lockMyo
 }
 --STANDARD_BINDINGS = true
@@ -141,6 +141,7 @@ function onForegroundWindowChange(app, title)
 end
 
 function onPeriodic()
+  if (myo.isUnlocked()) then
     deltaTime = myo.getTimeMilliseconds() - lastScrollTime
     if (scrolling ~= 0 and deltaTime > SCROLL_INTERVAL - scrollAcceleration) then
         lastScrollTime = myo.getTimeMilliseconds()
@@ -151,7 +152,8 @@ function onPeriodic()
     x, y, z = myo.getAccel();
 
     if (x < accmax) then
-        scale = math.floor(math.abs(x - accmin) / accinterval);
+        scale = math.floor(math.abs(x - accmax) / accinterval);
+        myo.debug(x)
         myo.debug(scale)
         if (scale == 0) then
           myo.mouse("left", "click");
@@ -168,11 +170,12 @@ function onPeriodic()
         elseif (scale == 6) then
           myo.mouse("left", "click", "shift", "alt");
         end
-     end
-
-    if (DROPLOCK and myo.isUnlocked() and myo.getPitch() < -1) then
-        lockMyo();
     end
+
+  end
+  if (DROPLOCK and myo.isUnlocked() and myo.getPitch() < -1) then
+      lockMyo();
+  end
 end
 
 function activeAppName()  

@@ -7,6 +7,8 @@ var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must 
 var COLORS_RGB = [[133, 255, 0], [0, 184, 255]]
 var colorThreshold = 100;
 
+var HITBOX = 100;
+
 
 var canvas, stage;
 var infoBlock;
@@ -302,7 +304,7 @@ function canvasEvent(stage, event) {
 // list of roaches hit by hitting at argument.
 function checkHits(coords) {
   var hits = Object.values(roaches).filter(function(x){
-    return Math.abs(x.x - coords.x) + Math.abs(x.y - coords.y) < 85;
+    return Math.abs(x.x - coords.x) + Math.abs(x.y - coords.y) < HITBOX;
   });
   return hits;
 }
