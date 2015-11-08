@@ -14,9 +14,9 @@ scrolling = 0
 lastScrollTime = 0
 wasActive = false
 
-accmax = 1
-accmin = 2
-accinterval = math.floor((accmax - accmin) / 4);
+accmax = -1
+accmin = -2
+accinterval = 0.25;
 
 description = [[  
 Mouse Control Script
@@ -153,15 +153,20 @@ function onPeriodic()
     x, y, z = myo.getAccel();
 
     if (x < accmax) then
-        scale = math.abs(math.floor(x / accinterval));
+        scale = math.floor(math.abs(x - accmin) / accinterval);
+        myo.debug(scale)
         if (scale == 0) then
-          myo.mouse(left, click);
-        else if (scale == 1) then
-          myo.mouse(left, click, shift);
-        else if (scale == 2) then
-          myo.mouse(left, click, control);
-        else if (scale == 3) then
-          myo.mouse(left, click, alt);
+          myo.mouse("left", "click");
+          myo.debug("click")
+        elseif (scale == 1) then
+          myo.mouse("left", "click", "shift");
+          myo.debug("click")
+        elseif (scale == 2) then
+          myo.mouse("left", "click", "control");
+          myo.debug("click")
+        elseif (scale == 3) then
+          myo.mouse("left", "click", "alt");
+          myo.debug("click")
         end
      end
 

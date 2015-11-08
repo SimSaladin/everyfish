@@ -318,8 +318,6 @@ function calculatePixels() {
   scoreBlock[ COLORS[0] ].text = "Score " + scores[ COLORS[0] ];
   scoreBlock[ COLORS[1] ].text = "Score " + scores[ COLORS[1] ];
 
-  window.setTimeout(calculatePixels, 500);
-  
 }
 
 function colorDistance(rgb_1, rgb_2) {
