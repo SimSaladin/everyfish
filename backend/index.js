@@ -4,7 +4,7 @@ var io = require('socket.io')(http);
 
 var CANVAS_WIDTH = 800, CANVAS_HEIGHT = 550;
 var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must be same in frontend/script.js
-var roachPerPlayer = 50;
+var roachPerPlayer = 5;
 var roachDensity = 0.2;
 
 var socket_count = 0 // only increased atm
@@ -98,7 +98,7 @@ function nextUnicId() {
 function updateGame() {
   // create roach pos & seed here
   roachCreated = Math.random () < roachDensity;
-  if (roaches.length() < 2 * roachPerPlayer && roachCreated) {
+  if (roaches.length < 2 * roachPerPlayer && roachCreated) {
     roachId = nextUnicId();
     roaches.push(roachId);
   } else {
@@ -115,10 +115,10 @@ function updateGame() {
 
   if (roachCreated) {
     if(oneOrTwo == 1) {
-      roachPos = [50, Math.random() * CANVAS_HEIGHT];
+      roachPos = [5, Math.random() * CANVAS_HEIGHT];
       roachAngle = Math.random() * 180 + 180;
     } else {
-      roachPos = [CANVAS_WIDTH - 50, Math.random() * CANVAS_HEIGHT];
+      roachPos = [CANVAS_WIDTH - 5, Math.random() * CANVAS_HEIGHT];
       roachAngle = Math.random() * 180;
     }
 
