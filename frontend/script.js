@@ -347,12 +347,22 @@ var animation = {
    ease: createjs.Ease.getPowInOut(4)
 };
 
+function sortFunc(obj1, obj2, opt) {
+  if (obj1.createdTime > obj2.createdTime) {return 1;}
+  if (obj1.createdTime < obj2.createdTime) {return -1;}
+  if (obj1.createdTime) {return -1;}
+  if (obj2.createdTime) {return 1;}
+  return 0;
+}
+
 function animateShape(stage, shape, coords) {
    shape.set(new animation.initialParameters(coords.x, coords.y));
+   shape.createdTime = getTime();
    stage.addChild(shape);
+   stage.sortChildren(sortFunc);
 
    // move to background
-   stage.setChildIndex(shape, splashes.length);
+   stage.setChildIndex(shape, splashes.length-1);
 
    createjs.Tween.get(shape, { loop: false })
       .to(new animation.targetParameters(coords.x, coords.y, 1.1), 
