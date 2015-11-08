@@ -203,19 +203,21 @@ function endGame(){
        effects;
    var i, safeDist = 100,
        effectsAmount = 2,
-       output;
+       output, myIndex;
 
    effects = new Array(effectsAmount);
    positions = new Array(effectsAmount);
 
-   output = scores[COLORS[0]] + " - " + scores[COLORS[1]];
+   myIndex = COLORS[0] == color ? 0 : 1;
+   output = scores[myIndex] > scores[1 - myIndex] ? "YOU WIN!" : "YOU LOSE!";
    
    /* create the texts */
-   title = new createjs.Text("The end!", 
-         "20px Arial", "#ff7700");
+   title = new createjs.Text(output, "20px Arial", "#ff7700");
    title.textAlign = "center";
    title.x = CANVAS_WIDTH / 2;
    title.y = CANVAS_HEIGHT / 2;
+
+   output = scores[COLORS[0]] + " - " + scores[COLORS[1]];
 
    information = new createjs.Text(output,
          "15px Arial", "#ff7700");
