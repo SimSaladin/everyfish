@@ -97,7 +97,7 @@ function startGame(socket, color){
   socket.emit('start', color);
 
   // manual spawn to speed up the start
-  roachId = nextUnicId();
+  var roachId = nextUnicId();
   roaches.push(roachId);
   spawnRoach(roachId);
 }
