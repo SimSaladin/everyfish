@@ -18,11 +18,11 @@ because it is rather stupid
 - ~~roach colors~~
 - ~~Fix splat draw order~~
 - Prettier splats (animated)
-- Map myo to different splats
+- ~~Map myo to different splats~~
   - do we need a custom driver for myo?
   - use velocity
 - ~~A "crusher hand" cursor~~
-- pointer lock or other features for miss clicks and UX?
-- Background image - or will it be too confusing/dirty?
+- ~~pointer lock~~ or other features for miss clicks and UX?
+- ~~Background image - or will it be too confusing/dirty?~~
 - Set up running somewhere. Domain?
 - New splats end up below old splats
