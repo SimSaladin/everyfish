@@ -82,5 +82,6 @@ function getLineSplat(startX, startY, color, angle, length, seed) {
     curve.graphics.lineTo( x0 + sin(theta) * amplitude, y0 - cos(theta) * amplitude );
   }
   
+  curve.cache(0,0,curve.width, curve.height);
   return curve;
 }
