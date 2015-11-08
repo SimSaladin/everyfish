@@ -231,7 +231,7 @@ function endGame(){
        information,
        effects;
    var i, safeDist = 100,
-       effectsAmount = 2,
+       effectsAmount = 1,
        output, myIndex;
 
    effects = new Array(effectsAmount);
@@ -263,11 +263,17 @@ function endGame(){
             safeDist, CANVAS_HEIGHT - safeDist);
    };
 
+   /* ...or not */
+   positions[0].x = CANVAS_WIDTH / 2 - 300;
+   positions[0].y = CANVAS_HEIGHT / 2 - 40;
+
    /* create the splats */
-   effects[0] = splat.createDefaultLine(
-         color, positions[0], 200, Math.PI, Math.floor(Math.random() * 1000) + 1);
-   effects[1] = splat.createDefaultRound(
-         color, positions[1], Math.floor(Math.random() * 1000) + 1);
+
+   // TODO: choose between round and line
+   //effects[0] = splat.createRound(color, positions[0], 
+         //Math.floor(Math.random() * 1000) + 1, 50);
+   effects[0] = splat.createDefaultLine(color, positions[0], 
+         350, Math.PI / 2, Math.floor(Math.random() * 1000) + 1);
 
    /* remove old children */
    // stage.removeAllChildren();
