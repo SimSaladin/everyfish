@@ -132,6 +132,7 @@ function initialize() {
 
   console.log("ready");
 
+  canvasDom.requestPointerLock();
 
   socket.on("connect", function (s) {
     console.log("socket.io connected");
@@ -239,18 +240,18 @@ function endGame(){
    output = scores[color] > scores[otherColor] ? "YOU WIN!" : "YOU LOSE!";
    
    /* create the texts */
-   title = new createjs.Text(output, "20px Arial", "#ff7700");
+   title = new createjs.Text(output, "60px Arial", "#ff7700");
    title.textAlign = "center";
    title.x = CANVAS_WIDTH / 2;
-   title.y = CANVAS_HEIGHT / 2;
+   title.y = CANVAS_HEIGHT / 2 - 65;
 
    output = scores[COLORS[0]] + " - " + scores[COLORS[1]];
 
    information = new createjs.Text(output,
-         "15px Arial", "#ff7700");
+         "35px Arial", "#ff7700");
    information.textAlign = "center";
    information.x = CANVAS_WIDTH / 2;
-   information.y = CANVAS_HEIGHT / 2 + 20;
+   information.y = CANVAS_HEIGHT / 2;
 
    /* randomize positions */
    for (i = 0; i < effectsAmount; i++) {
@@ -268,7 +269,7 @@ function endGame(){
          color, positions[1], Math.floor(Math.random() * 1000) + 1);
 
    /* remove old children */
-   stage.removeAllChildren();
+   // stage.removeAllChildren();
 
    effects.forEach(function (element, index) {
       animateShape(stage, element, positions[index]);
@@ -359,7 +360,6 @@ function moveCallback(e) {
 function canvasEvent(stage, event) {
     var coords = getCanvasCoords(event); 
 
-    canvasDom.requestPointerLock();
 
     var hits = checkHits(mouse);
     if (hits.length == 0) return false;
