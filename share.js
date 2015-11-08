@@ -5,7 +5,6 @@ Splash = Class.create({
   initialize: function(data){
     this.data = data;
     this.data.color = color;
-    this.data.seed = Math.seed();
     this.json = { type: this.type, data: data };
   },
 
@@ -29,7 +28,7 @@ RoundSplat = Class.create(Splash, {
 BezierSplat = Class.create(Splash, {
   initialize: function($super, data) {
     this.type = "BezierSplat";
-    $super({ coords: data.coords, radius: data.radius });
+    $super(data);
   }
 });
 /* }}} */

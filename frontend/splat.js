@@ -10,10 +10,11 @@ splat.createDefaultBezier = function (color, pos) {
    return splat.getShape(color);
 };
 
-splat.createBezier = function (color, pos, radius) {
+splat.createBezier = function (color, pos, radius, seed) {
    var params, splat;
    params = this.bezierDefaultParamsFor([pos.x, pos.y]);
    params.radius = radius;
+   params.seed = seed;
    splat = new bezierSplat(params);
    return splat.getShape(color); 
 };

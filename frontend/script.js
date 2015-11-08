@@ -1,3 +1,4 @@
+"use strict";
 // vim:foldmethod=marker:foldlevel=0
 var socket = io();
 
@@ -141,7 +142,7 @@ function waitingForPlayers(){
 function startGame(c){
   color = c;
 
-  indicator = new createjs.Shape();
+  var indicator = new createjs.Shape();
   indicator.graphics.beginFill(c).drawRect(0,0,CANVAS_WIDTH,9);
   stage.addChild(indicator);
 
@@ -163,7 +164,7 @@ function startGame(c){
 
       case "BezierSplat":
         splash = new BezierSplat({ coords: json.data.coords, radius: json.data.radius });
-        shape = splat.createBezier(json.data.color, json.data.coords, json.data.radius);
+        shape = splat.createBezier(json.data.color, json.data.coords, json.data.radius, json.data.seed);
         console.log("received bezier");
         break;
 
@@ -184,7 +185,7 @@ function startGame(c){
   socket.on("roach", function(data) {
     var color = data.player == 1 ? "green" : "blue";
     console.log(color);
-    roach = createCockroach(stage, data.seed, data.x, data.y, data.angle, color);
+    var roach = createCockroach(stage, data.seed, data.x, data.y, data.angle, color);
     roaches[roach.id] = roach;
     roaches[roach.id].data = data;
   });
@@ -262,7 +263,7 @@ function endGame(){
 function canvasEvent(stage, event) {
     var coords = getCanvasCoords(event); 
 
-    hits = checkHits(coords);
+    var hits = checkHits(coords);
     if (hits.length == 0) return false;
 
     var splatGenerator;
@@ -277,12 +278,12 @@ function canvasEvent(stage, event) {
           if (value < 3) {
              // bezier
              splatGenerator = function() { return new BezierSplat(
-                   { coords: coords, radius: value * 30 }) };
+                   { coords: coords, radius: value * 30, seed: Math.random() }) };
              console.log("sent bezier");
           } else {
              splatGenerator = function() { return new RoundSplat(
-                   { coords: coords, radius: 15 + 2 * value }) };
-             console.log("sent round");
+                   { coords: coords, radius: 15 + 2 * value, seed: Math.random() }) };
+             console.log("sent bezier");
           }
        
           break;
@@ -291,7 +292,7 @@ function canvasEvent(stage, event) {
     }
 
     hits.map(function(hit){
-      s = splatGenerator();
+      var s = splatGenerator();
       s.data.roach_id = hit.id;
       s.data.color = COLORS[hit.data.player-1];
       s.add();
@@ -300,7 +301,7 @@ function canvasEvent(stage, event) {
 
 // list of roaches hit by hitting at argument.
 function checkHits(coords) {
-  hits = Object.values(roaches).filter(function(x){
+  var hits = Object.values(roaches).filter(function(x){
     return Math.abs(x.x - coords.x) + Math.abs(x.y - coords.y) < 85;
   });
   return hits;
@@ -376,7 +377,7 @@ function animateShape(stage, shape, coords) {
 
 /* {{{ Winner calculation */
 function calculatePixels() {
-  pixels = document.getElementById("main").getContext("2d").getImageData(0,9,CANVAS_WIDTH,CANVAS_HEIGHT-9).data;
+  var pixels = document.getElementById("main").getContext("2d").getImageData(0,9,CANVAS_WIDTH,CANVAS_HEIGHT-9).data;
 
   var i = pixels.length;
 

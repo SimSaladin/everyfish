@@ -1,3 +1,4 @@
+"use strict";
 /** 
  * Bezier Splat implementation object.
  *
@@ -8,8 +9,10 @@
  * @param uniform {Boolean} uniform distribution of tips
 */
 function bezierSplat(params) {
+   var random = Math.seed(params.seed);
+   console.log("bezierSplat seed", params.seed);
    var randomN = function (n) {
-      return Math.floor((Math.random() * n) + 1);
+      return Math.floor((random() * n) + 1);
    };
 
    var getPosOnCircle = function (angle, r, o) {
@@ -19,7 +22,7 @@ function bezierSplat(params) {
 
    var nullVector = function (n) {
       var vector = [], i;
-      for (i = 0; i < n; i++) {
+      for (var i = 0; i < n; i++) {
          vector.push(0);
       }
       return vector;
@@ -36,7 +39,7 @@ function bezierSplat(params) {
       if (symmetry) {
          angleOffsets = nullVector(tipNo);
       } else {
-         angleOffsets = numeric.random([1,tipNo])[0];
+         angleOffsets = seededrandom(tipNo, random);
          angleOffsets = numeric.div(angleOffsets, 2 * Math.PI);
          angleOffsets = numeric.mul(offsetCoef, angleOffsets);
       }
@@ -44,13 +47,13 @@ function bezierSplat(params) {
       angleStep = (2 * Math.PI) / (tipNo - 1);
 
       // calculate tip offset coefficien randomly
-      offsets = numeric.random([1,tipNo])[0];
+      offsets = seededrandom(tipNo, random);
       offsets = numeric.add(numeric.mul(offsetCoef / 2.0, offsets), 1.5);
 
       /* calculates initial point positions
        * on a circle of radius radius */
       positions = [];
-      for (i = 0; i < tipNo; i++) {
+      for (var i = 0; i < tipNo; i++) {
          positions.push(getPosOnCircle(
                   i * angleStep + angleOffsets[i], 
                   radius, position));
@@ -58,7 +61,7 @@ function bezierSplat(params) {
 
       /* updates every second point as
        * a tip by moving it by an offset */
-      for (i = 1; i < tipNo; i += 2) {
+      for (var i = 1; i < tipNo; i += 2) {
          direction = numeric.sub(positions[i], position);
          offsetVector = numeric.mul(offsets[i], direction);
          positions[i] = numeric.add(positions[i], 
@@ -83,7 +86,7 @@ function bezierSplat(params) {
          .beginStroke(color)
          .beginFill(color);
 
-      for (i = 0; i < data.length - 2; i += 2) {
+      for (var i = 0; i < data.length - 2; i += 2) {
          curve = curve.bezierCurveTo(
                data[i][0],
                data[i][1],
@@ -96,4 +99,10 @@ function bezierSplat(params) {
       return new createjs.Shape(curve);
    };
 };
+
+function seededrandom(len, random) {
+  var arr = [];
+  while (len-- > 0) arr.push(random());
+  return arr;
+}
 
