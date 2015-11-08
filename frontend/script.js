@@ -7,7 +7,7 @@ var COLORS = ["#85FF00", "#00B8FF"]; // Available colors for the splashes. Must 
 var COLORS_RGB = [[133, 255, 0], [0, 184, 255]]
 var colorThreshold = 100;
 
-var HITBOX = 120;
+var HITBOX = 140;
 
 
 var canvas, stage;
@@ -348,8 +348,8 @@ function moveCallback(e) {
           0;
 
    console.log(movementX + ", " + movementY);
-   movementX = Math.abs(movementX) < 50 ? movementX : 0;
-   movementY = Math.abs(movementY) < 50 ? movementY : 0;
+   movementX = Math.abs(movementX) < 80 ? movementX : movementX*0.2;
+   movementY = Math.abs(movementY) < 80 ? movementY : movementY*0.2;
 
    // calculate the new coordinates where we should draw the ship
    mouse.x = Math.max(Math.min(mouse.x + movementX, CANVAS_WIDTH), 0);
