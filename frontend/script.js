@@ -150,8 +150,8 @@ function startGame(c){
   scoreBlock[COLORS[0]].y = scoreBlock[COLORS[1]].y = 20;
   scoreBlock[COLORS[0]].x = 50;
   scoreBlock[COLORS[1]].x = 700;
-  stage.addChild(scoreBlock[COLORS[0]]);
-  stage.addChild(scoreBlock[COLORS[1]]);
+  // stage.addChild(scoreBlock[COLORS[0]]);
+  // stage.addChild(scoreBlock[COLORS[1]]);
 
   stage.removeChild(infoBlock);
   socket.on("splash", function(msg){
