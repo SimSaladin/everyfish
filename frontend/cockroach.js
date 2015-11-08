@@ -1,11 +1,11 @@
 
-// Takes starting position and starting angle (in degrees)
-function createCockroach(stage, seed, x, y, angle, turnSpeedCoeff, speed) {
+// Takes starting position and starting angle (in degrees), color is either "green" or "blue"
+function createCockroach(stage, seed, x, y, angle, color, turnSpeedCoeff, speed) {
   random = Math.seed(seed);
   if (!turnSpeedCoeff) turnSpeedCoeff = 0.001;
   if (!speed) speed = 4;
 
-  var runner = new createjs.Sprite(cockroachSheet, "run");
+  var runner = new createjs.Sprite(cockroachSheet, color);
   runner.framerate = 18;
 
   // register coords: middlepoint to fix rotation

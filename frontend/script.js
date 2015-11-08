@@ -88,9 +88,29 @@ var Simple1DNoise = function(random) {
 /* {{{ Start, play, end */
 
 jQuery(function(){
-  console.log("ready");
   canvas = jQuery("#main");
   stage = new createjs.Stage("main");
+
+  // load cockroach animation
+  cockroachSheet = new createjs.SpriteSheet( {
+    images: ["cockroach.png"],
+    frames: {width:175, height:207},
+    animations: {
+      green: [0,1],
+      blue: [2,3]
+    }
+  });
+  if (!cockroachSheet.complete) {
+    console.log("waiting for images...");
+    cockroachSheet.addEventListener("complete", initialize);
+  }
+  else initialize();
+});
+
+function initialize() {
+
+  console.log("ready");
+
 
   socket.on("connect", function (s) {
     console.log("socket.io connected");
@@ -108,15 +128,7 @@ jQuery(function(){
 
   waitingForPlayers();
 
-  // load cockroach animation
-  cockroachSheet = new createjs.SpriteSheet( {
-    images: ["cockroach.png"],
-    frames: {width:175, height:207},
-    animations: {
-      run: [0,1]
-    }
-  });
-});
+};
 
 function waitingForPlayers(){
   infoBlock = new createjs.Text("Waiting for another player...", "20px Arial", "#ff7700");
@@ -167,7 +179,8 @@ function startGame(c){
   });
 
   socket.on("roach", function(data) {
-    roach = createCockroach(stage, data.seed, data.x, data.y, data.angle);
+    var color = data.player == 1 ? "green" : "blue";
+    roach = createCockroach(stage, data.seed, data.x, data.y, data.angle, color);
     roaches[roach.id] = roach;
   });
 

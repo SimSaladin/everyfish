@@ -13,8 +13,9 @@ because it is rather stupid
   - ~~random walk~~
 - Game ~~start~~ and ~~end~~
 - ~~Different colors for different players~~
-- Scoring: controlled area, number of killed cockroaches, what else? style
+- Scoring: ~~controlled area~~, number of killed cockroaches, what else? style
   points?
+- roach colors
 - ~~Fix splat draw order~~
 - Prettier splats (animated)
 - Map myo to different splats
