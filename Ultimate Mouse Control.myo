@@ -150,9 +150,10 @@ function onPeriodic()
     end
 
     x, y, z = myo.getAccel();
+    a = (x + y + z)
 
-    if (x < accmax) then
-        scale = math.floor(math.abs(x - accmax) / accinterval);
+    if (a < accmax) then
+        scale = math.floor(math.abs(a - accmax) / accinterval);
         myo.debug(x)
         myo.debug(scale)
         if (scale == 0) then

@@ -15,6 +15,9 @@ var canvasDom;
 var mouse = {};
 mouse.x = 100;
 mouse.y = 100;
+mouse.movementX = 0;
+mouse.movementY = 0;
+mouse.isDown = false;
 
 var infoBlock;
 var scoreBlock = {};
@@ -199,6 +202,14 @@ function startGame(c){
               json.data.radius);
         console.log("received round");
         break;
+      
+      case "LineSplat":
+        splash = new LineSplat({ coords: json.data.coords, length: json.data.length,
+          theta: json.data.theta});
+        shape = splat.createDefaultLine(json.data.color, coords, json.data.length,
+            json.data.theta, json.data.seed);
+        console.log("receive line");
+        break;
     }
 
     splashes.concat([splash]);
@@ -218,6 +229,8 @@ function startGame(c){
 
   // Click listeners
   canvas.on("click", function(e){ canvasEvent(stage, e); });
+  canvas.on("mousedown", function(e){ canvasEvent(stage, e); });
+  canvas.on("mouseup", function(e){ canvasEvent(stage, e); });
   // right click, disable contextmenu, do a click instead
   canvas.on("contextmenu", function(e){ canvasEvent(stage, e); return false });
 
@@ -338,62 +351,100 @@ function moveCallback(e) {
    }
 
    //get a reference to the canvas
-   var movementX = e.movementX ||
+   // GLOBAL
+   mouse.movementX = e.movementX ||
           e.mozMovementX ||
           e.webkitMovementX ||
           0;
 
-   var movementY = e.movementY ||
+   // GLOBAL
+   mouse.movementY = e.movementY ||
           e.mozMovementY ||
           e.webkitMovementY ||
           0;
 
-   console.log(movementX + ", " + movementY);
-   movementX = Math.abs(movementX) < 50 ? movementX : 0;
-   movementY = Math.abs(movementY) < 50 ? movementY : 0;
+   console.log(mouse.movementX + ", " + mouse.movementY);
+   mouse.movementX = Math.abs(mouse.movementX) < 60 ? mouse.movementX : 10;
+   mouse.movementY = Math.abs(mouse.movementY) < 60 ? mouse.movementY : 10;
 
    // calculate the new coordinates where we should draw the ship
-   mouse.x = Math.max(Math.min(mouse.x + movementX, CANVAS_WIDTH), 0);
-   mouse.y = Math.max(Math.min(mouse.y + movementY, CANVAS_HEIGHT), 0);
+   mouse.x = Math.max(Math.min(mouse.x + mouse.movementX, CANVAS_WIDTH), 0);
+   mouse.y = Math.max(Math.min(mouse.y + mouse.movementY, CANVAS_HEIGHT), 0);
 
-   //mouse.x += movementX;
-   //mouse.y += movementY;
+   //mouse.x += mouse.movementX;
+   //mouse.y += mouse.movementY;
 
    mouse.bitmap.x = mouse.x;
    mouse.bitmap.y = mouse.y;
+   canvasEvent(e);
 }
 
 // Build the shape based on the kind of the click
 function canvasEvent(stage, event) {
     var coords = getCanvasCoords(event); 
 
+    // before hit check
+    switch (event.type) {
+     case "mousedown":
+        mouse.isDown = true;
+     case "mouseup":
+        //mouse.isDown = false;
+    }
+
+    if (event.type == "click" || mouse.isDown);
 
     var hits = checkHits(mouse);
     if (hits.length == 0) return false;
 
     var splatGenerator;
+
+    var movY = mouse.movementX, movX = mouse.movementX;
+
+    function execLinesplat(value) {
+      var theta = math.atan2(-movY, movX);
+      splatGenerator = function(splatPoint) { return new LineSplat(
+          { coords: splatPoint, length: 30 + (value - 2) / 5 * 21, seed: Math.random(), theta: theta }) };
+      console.log("sent long splat");
+    }
+    function getMagnitude() {
+      var alt = 0, shift = 0, ctrl = 0;
+      alt = event.altKey ? 1 : 0;
+      shift = event.shiftKey ? 1 : 0;
+      ctrl = event.ctrlKey ? 1 : 0;
+
+      return alt << 2 | shift << 1 | ctrl; 
+    }
+
     switch (event.type) {
        case "click":
-          var alt = 0, shift = 0, ctrl = 0;
-          alt = event.altKey ? 1 : 0;
-          shift = event.shiftKey ? 1 : 0;
-          ctrl = event.ctrlKey ? 1 : 0;
-
-          var value = alt << 2 | shift << 1 | ctrl; 
-          if (value < 2) {
+          var value = getMagnitude();
+          if (value < 2 && false) {
              // bezier
              splatGenerator = function(splatPoint) { return new BezierSplat(
                    { coords: splatPoint, radius: 20 + value * 10, seed: Math.random() }) };
              console.log("sent bezier");
           } else {
+            if (Math.sqrt(movX*movX + movY*movY) < 10) {
              splatGenerator = function(splatPoint) { return new RoundSplat(
                    { coords: splatPoint, radius: 30 + (value - 2) / 5 * 20, seed: Math.random() }) };
-             console.log("sent bezier");
+             console.log("sent round spiky splat");
+            } else {
+              execLinesplat(value);
+            }
+
           }
        
           break;
        case "contextmenu":
           break;
+
+       case "mousemove" :
+       case "mousedown" :
+       case "mouseup"   :
+          var value = getMagnitude(event)
+          execLinesplat(value);
+          break;
+
     }
 
     hits.map(function(hit){

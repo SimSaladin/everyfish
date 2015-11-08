@@ -33,6 +33,13 @@ BezierSplat = Class.create(Splash, {
 });
 /* }}} */
 
+LineSplat = Class.create(Splash, {
+  initialize: function($super, data) {
+    this.type = "LineSplat";
+    $super(data);
+  }
+})
+
 /* {{{ Circle */
 Circle = Class.create(Splash, {
   initialize: function($super, coords) {
