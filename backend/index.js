@@ -50,6 +50,9 @@ app.get("/share.js", function(req, res){
 app.get("/bg.jpg", function(req, res){
   res.sendFile('frontend/bg.jpg', {'root': '../'});
 });
+app.get("/logo.png", function(req, res){
+  res.sendFile('logo.png', {'root': '../'});
+});
 
 /* }}} */
 
