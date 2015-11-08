@@ -11,6 +11,11 @@ var HITBOX = 120;
 
 
 var canvas, stage;
+var canvasDom;
+var mouse = {};
+mouse.x = 100;
+mouse.y = 100;
+
 var infoBlock;
 var scoreBlock = {};
 var scores = {};
@@ -92,8 +97,21 @@ var Simple1DNoise = function(random) {
 
 jQuery(function(){
   canvas = jQuery("#main");
+  canvasDom = canvas.get()[0];
+
+  document.addEventListener('pointerlockchange', changeCallback, false);
+  document.addEventListener('mozpointerlockchange', changeCallback, false);
+  document.addEventListener('webkitpointerlockchange', changeCallback, false);
+
+  canvasDom.requestPointerLock = canvasDom.requestPointerLock ||
+     canvasDom.mozRequestPointerLock ||
+     canvasDom.webkitRequestPointerLock;
+
+
   stage = new createjs.Stage("main");
 
+  mouse.bitmap = new createjs.Bitmap("fist.jpg");
+  
   // load cockroach animation
   cockroachSheet = new createjs.SpriteSheet( {
     images: ["cockroach.png"],
@@ -129,6 +147,10 @@ function initialize() {
 
   createjs.Ticker.setFPS(60);
   createjs.Ticker.addEventListener("tick", stage);
+  // createjs.Ticker.addEventListener("tick", updateMouse);
+
+  stage.addChild(mouse.bitmap);
+  stage.update();
 
   waitingForPlayers();
 
@@ -261,11 +283,85 @@ function endGame(){
 
 /* {{{ Input */
 
+// called when the pointer lock has changed. Here we check whether the
+// pointerlock was initiated on the element we want.
+function changeCallback(e) {
+  var canvasDom = canvas.get()[0];
+  if (document.pointerLockElement === canvasDom ||
+          document.mozPointerLockElement === canvasDom ||
+          document.webkitPointerLockElement === canvasDom) {
+
+      // we've got a pointerlock for our element, add a mouselistener
+      document.addEventListener("mousemove", moveCallback, false);
+  } else {
+      // pointer lock is no longer active, remove the callback
+      document.removeEventListener("mousemove", moveCallback, false);
+  }
+};
+
+function getPosition(event) {
+  var x = new Number();
+  var y = new Number();
+
+  if (event.x != undefined && event.y != undefined) {
+      x = event.x;
+      y = event.y;
+  }
+  else // Firefox method to get the position
+  {
+      x = event.clientX + document.body.scrollLeft +
+              document.documentElement.scrollLeft;
+      y = event.clientY + document.body.scrollTop +
+              document.documentElement.scrollTop;
+  }
+
+  x -= canvasDom.offsetLeft;
+  y -= canvasDom.offsetTop;
+
+  return {x:x, y:y};
+}
+
+function moveCallback(e) {
+   // if we enter this for the first time, get the initial position
+   if (mouse.x == -1) {
+      pos = getPosition(e);
+      mouse.x = pos.x;
+      mouse.y = pos.y;
+   }
+
+   //get a reference to the canvas
+   var movementX = e.movementX ||
+          e.mozMovementX ||
+          e.webkitMovementX ||
+          0;
+
+   var movementY = e.movementY ||
+          e.mozMovementY ||
+          e.webkitMovementY ||
+          0;
+
+   console.log(movementX + ", " + movementY);
+   movementX = Math.abs(movementX) < 50 ? movementX : 0;
+   movementY = Math.abs(movementY) < 50 ? movementY : 0;
+
+   // calculate the new coordinates where we should draw the ship
+   mouse.x = Math.max(Math.min(mouse.x + movementX, CANVAS_WIDTH), 0);
+   mouse.y = Math.max(Math.min(mouse.y + movementY, CANVAS_HEIGHT), 0);
+
+   //mouse.x += movementX;
+   //mouse.y += movementY;
+
+   mouse.bitmap.x = mouse.x;
+   mouse.bitmap.y = mouse.y;
+}
+
 // Build the shape based on the kind of the click
 function canvasEvent(stage, event) {
     var coords = getCanvasCoords(event); 
 
-    var hits = checkHits(coords);
+    canvasDom.requestPointerLock();
+
+    hits = checkHits(mouse);
     if (hits.length == 0) return false;
 
     var splatGenerator;
@@ -351,6 +447,11 @@ var animation = {
    duration: 400,
    ease: createjs.Ease.getPowInOut(4)
 };
+
+function updateMouse(event) {
+  mouse.bitmap.x = mouse.x;
+  mouse.bitmap.y = mouse.y;
+}
 
 function sortFunc(obj1, obj2, opt) {
   if (obj1.createdTime > obj2.createdTime) {return 1;}
