@@ -208,8 +208,8 @@ function endGame(){
    effects = new Array(effectsAmount);
    positions = new Array(effectsAmount);
 
-   myIndex = COLORS[0] == color ? 0 : 1;
-   output = scores[myIndex] > scores[1 - myIndex] ? "YOU WIN!" : "YOU LOSE!";
+   otherColor = COLORS[0] == color ? COLORS[1] : COLORS[0];
+   output = scores[color] > scores[otherColor] ? "YOU WIN!" : "YOU LOSE!";
    
    /* create the texts */
    title = new createjs.Text(output, "20px Arial", "#ff7700");
