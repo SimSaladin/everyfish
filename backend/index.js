@@ -23,6 +23,9 @@ app.get('/', function(req, res){
 app.get("/script.js", function(req, res){
   res.sendFile('frontend/script.js', {'root': '../'});
 });
+app.get("/prototype.min.js", function(req, res){
+  res.sendFile('prototype.min.js', {'root': '../'});
+});
 app.get("/splat.js", function(req, res){
   res.sendFile('frontend/splat.js', {'root': '../'});
 });

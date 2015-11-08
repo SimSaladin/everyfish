@@ -13,9 +13,11 @@ SCROLL_INTERVAL = 100
 scrolling = 0
 lastScrollTime = 0
 wasActive = false
+isDown = false
 
 accmax = -0.8
 accmin = -3
+lowLevelReturn = -0.4
 accinterval = math.abs(accmax-accmin)/6;
 
 description = [[  
@@ -157,20 +159,25 @@ function onPeriodic()
         myo.debug(x)
         myo.debug(scale)
         if (scale == 0) then
-          myo.mouse("left", "click");
+          myo.mouse("left", "down");
         elseif (scale == 1) then
-          myo.mouse("left", "click", "control");
+          myo.mouse("left", "down", "control");
         elseif (scale == 2) then
-          myo.mouse("left", "click", "shift");
+          myo.mouse("left", "down", "shift");
         elseif (scale == 3) then
-          myo.mouse("left", "click", "shift", "control");
+          myo.mouse("left", "down", "shift", "control");
         elseif (scale == 4) then
-          myo.mouse("left", "click", "alt");
+          myo.mouse("left", "down", "alt");
         elseif (scale == 5) then
-          myo.mouse("left", "click", "control", "alt");
+          myo.mouse("left", "down", "control", "alt");
         elseif (scale == 6) then
-          myo.mouse("left", "click", "shift", "alt");
+          myo.mouse("left", "down", "shift", "alt");
         end
+        isDown = true
+    end
+
+    if (a > lowLevelReturn) then
+        isDown = false
     end
 
   end

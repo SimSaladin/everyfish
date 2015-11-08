@@ -205,7 +205,7 @@ function startGame(c){
       case "LineSplat":
         splash = new LineSplat({ coords: json.data.coords, length: json.data.length,
           theta: json.data.theta});
-        shape = splat.createDefaultLine(json.data.color, coords, json.data.length,
+        shape = splat.createDefaultLine(json.data.color, json.data.coords, json.data.length,
             json.data.theta, json.data.seed);
         console.log("receive line");
         break;
@@ -362,7 +362,7 @@ function moveCallback(e) {
           e.webkitMovementY ||
           0;
 
-   console.log(mouse.movementX + ", " + mouse.movementY);
+   //console.log(mouse.movementX + ", " + mouse.movementY);
    mouse.movementX = Math.abs(mouse.movementX) < 60 ? mouse.movementX : 10;
    mouse.movementY = Math.abs(mouse.movementY) < 60 ? mouse.movementY : 10;
 
@@ -375,12 +375,11 @@ function moveCallback(e) {
 
    mouse.bitmap.x = mouse.x;
    mouse.bitmap.y = mouse.y;
-   canvasEvent(e);
+   canvasEvent(stage, e);
 }
 
 // Build the shape based on the kind of the click
 function canvasEvent(stage, event) {
-    var coords = getCanvasCoords(event); 
 
     // before hit check
     switch (event.type) {
@@ -397,11 +396,13 @@ function canvasEvent(stage, event) {
     switch (event.type) {
      case "mousedown":
         mouse.isDown = true;
+        break;
      case "mouseup":
-        //mouse.isDown = false;
+        mouse.isDown = false;
+        break;
     }
 
-    if (event.type == "click" || mouse.isDown) return false;
+    if (! (event.type == "click" || mouse.isDown)) return false;
 
     var hits = checkHits(mouse);
     if (hits.length == 0) return false;
@@ -411,9 +412,9 @@ function canvasEvent(stage, event) {
     var movY = mouse.movementX, movX = mouse.movementX;
 
     function execLinesplat(value) {
-      var theta = math.atan2(-movY, movX);
+      var theta = Math.atan2(-movY, movX) - Math.PI/2;
       splatGenerator = function(splatPoint) { return new LineSplat(
-          { coords: splatPoint, length: 30 + (value - 2) / 5 * 21, seed: Math.random(), theta: theta }) };
+          { coords: splatPoint, length: 50 + (value - 2) / 5 * 130, seed: Math.random(), theta: theta }) };
       console.log("sent long splat");
     }
     function getMagnitude() {
@@ -451,8 +452,9 @@ function canvasEvent(stage, event) {
        case "mousemove" :
        case "mousedown" :
        case "mouseup"   :
-          var value = getMagnitude(event)
-          execLinesplat(value);
+          var value = getMagnitude(event);
+          if (value >= 2) execLinesplat(value);
+          else return false;
           break;
 
     }
