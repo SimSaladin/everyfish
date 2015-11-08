@@ -357,7 +357,7 @@ function sortFunc(obj1, obj2, opt) {
 
 function animateShape(stage, shape, coords) {
    shape.set(new animation.initialParameters(coords.x, coords.y));
-   shape.createdTime = getTime();
+   shape.createdTime = Date.now();
    stage.addChild(shape);
    stage.sortChildren(sortFunc);
 
