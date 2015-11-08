@@ -211,7 +211,7 @@ function endGame(){
    effects = new Array(effectsAmount);
    positions = new Array(effectsAmount);
 
-   otherColor = COLORS[0] == color ? COLORS[1] : COLORS[0];
+   var otherColor = COLORS[0] == color ? COLORS[1] : COLORS[0];
    output = scores[color] > scores[otherColor] ? "YOU WIN!" : "YOU LOSE!";
    
    /* create the texts */
