@@ -94,8 +94,8 @@ function nextUnicId() {
 
 function updateGame() {
   // create roach pos & seed here
-  if (roaches.length() < 2 * roachPerPlayer) {
-    roachCreated = Math.random () < roachDensity;
+  roachCreated = Math.random () < roachDensity;
+  if (roaches.length() < 2 * roachPerPlayer && roachCreated) {
     roachId = nextUnicId();
     roaches.push(roachId);
   } else {
