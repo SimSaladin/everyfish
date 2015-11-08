@@ -274,15 +274,15 @@ function canvasEvent(stage, event) {
           shift = event.shiftKey ? 1 : 0;
           ctrl = event.ctrlKey ? 1 : 0;
 
-          var value = (alt << 2 | shift << 1 | ctrl) + 1; 
-          if (value < 3) {
+          var value = alt << 2 | shift << 1 | ctrl; 
+          if (value < 2) {
              // bezier
              splatGenerator = function() { return new BezierSplat(
-                   { coords: coords, radius: value * 30, seed: Math.random() }) };
+                   { coords: coords, radius: 20 + value * 10, seed: Math.random() }) };
              console.log("sent bezier");
           } else {
              splatGenerator = function() { return new RoundSplat(
-                   { coords: coords, radius: 25 + 4 * value, seed: Math.random() }) };
+                   { coords: coords, radius: 30 + (value - 2) / 5 * 19, seed: Math.random() }) };
              console.log("sent bezier");
           }
        
