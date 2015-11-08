@@ -361,7 +361,7 @@ function canvasEvent(stage, event) {
 
     canvasDom.requestPointerLock();
 
-    hits = checkHits(mouse);
+    var hits = checkHits(mouse);
     if (hits.length == 0) return false;
 
     var splatGenerator;
