@@ -56,53 +56,43 @@ app.get("/bg.jpg", function(req, res){
 io.on('connection', function(socket){
   console.log('user connected');
 
-  splashes[socket.id] = [];
+  splashes = {};
   colors[socket.id] = COLORS[++socket_count % 2];
   sockets[socket.id] = socket;
 
   socket.on('disconnect', function(){
     console.log('user disconnected');
-    delete splashes[socket.id];
     clearInterval(intervalid);
     io.sockets.sockets.forEach(function(s){ s.disconnect(true); });
   });
 
-  if (Object.keys(splashes).length >= 2) {
+  if (Object.keys(sockets).length >= 2) {
     console.log("starting game");
     curUnic = 0;
     roachesPerPlayer = [0, 0];
     roaches = [];
     for (s in sockets) startGame(sockets[s], colors[s]);
 
+    // manual spawn to speed up the start
+    spawnRoach();
+
     if (intervalid != null) clearInterval(intervalid);
     intervalid = setInterval(updateGame, 1000);
   };
 });
 
+// note: called for every socket
 function startGame(socket, color){
-  for (var c in splashes) {
-    console.log(c, splashes[c]);
-    for (var i in splashes[c]) {
-      s = splashes[c][i];
-      console.log(i, s);
-      socket.emit('splash', s);
-    }
-  };
 
   socket.on('splash', function(msg){
     splash = JSON.parse(msg);
     roach_id = splash.data.roach_id;
     console.log("DIEEEEEEEE", roach_id);
-    splashes[socket.id] = (splashes[socket.id] || []).concat([splash]);
+    splashes[roach_id] = splash;
     io.sockets.emit('splash', msg);
   });
 
   socket.emit('start', color);
-
-  // manual spawn to speed up the start
-  var roachId = nextUnicId();
-  roaches.push(roachId);
-  spawnRoach(roachId);
 }
 
 function nextUnicId() {
@@ -110,23 +100,25 @@ function nextUnicId() {
   return curUnic;
 }
 
-function spawnRoach(roachId) {
-  if (Math.random() <= 0.5 && roachesPerPlayer[0] < roachPerPlayer) {
+function spawnRoach() {
+  var oneOrTwo, roachPos, roachAngle;
+
+  if (Math.random() <= 0.5 && roachesPerPlayer[0] < roachPerPlayer || roachesPerPlayer[1] == roachPerPlayer) {
     oneOrTwo = 1;
     roachesPerPlayer[0] += 1;
+    roachPos = [5, Math.random() * CANVAS_HEIGHT];
+    roachAngle = Math.random() * 180 + 180;
   } else if (roachesPerPlayer[1] < roachPerPlayer) {
     oneOrTwo = 2;
     roachesPerPlayer[1] += 1;
-  }
-
-  console.log(oneOrTwo, roachesPerPlayer);
-  if(oneOrTwo == 1) {
-    roachPos = [5, Math.random() * CANVAS_HEIGHT];
-    roachAngle = Math.random() * 180 + 180;
-  } else {
     roachPos = [CANVAS_WIDTH - 5, Math.random() * CANVAS_HEIGHT];
     roachAngle = Math.random() * 180;
   }
+
+  var roachId = nextUnicId();
+  roaches.push(roachId);
+
+  console.log(oneOrTwo, roachesPerPlayer);
 
   roachSeed = Math.random() * 2*Math.PI;
 
@@ -134,27 +126,19 @@ function spawnRoach(roachId) {
 }
 
 function updateGame() {
-  var roachId
   // create roach pos & seed here
-  roachCreated = Math.random () < roachDensity;
+  
   roachCapacityReached = roaches.length >= 2 * roachPerPlayer;
-  if (!roachCapacityReached && roachCreated) {
-    roachId = nextUnicId();
-    roaches.push(roachId);
-  } else {
-    roachCreated = false;
+  if (!roachCapacityReached && Math.random() < roachDensity) {
+    spawnRoach();
   }
 
-  t = 0;
-  for (x in splashes) t += splashes[x].length;
-
-  if (roachCapacityReached && roaches.length == t ) {
+  if (roachCapacityReached && roaches.length == Object.keys(splashes).length ) {
     io.sockets.emit("end", "");
     clearInterval(intervalid);
     intervalid = null;
   }
 
-  if (roachCreated) spawnRoach(roachId);
 
 }
 
