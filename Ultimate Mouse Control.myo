@@ -16,7 +16,7 @@ wasActive = false
 
 accmax = -1
 accmin = -2
-accinterval = 0.25;
+accinterval = 1/6;
 
 description = [[  
 Mouse Control Script
@@ -92,8 +92,6 @@ end
  STANDARD_BINDINGS = {
     fist            = lockPosition,
     fingersSpread   = freePosition,
-    waveOut         = scrollUp,
-    waveIn          = scrollDown,
     doubleTap       = lockMyo
 }
 --STANDARD_BINDINGS = true
@@ -167,6 +165,12 @@ function onPeriodic()
         elseif (scale == 3) then
           myo.mouse("left", "click", "alt");
           myo.debug("click")
+        elseif (scale == 4) then
+          myo.mouse("left", "click", "shift", "control");
+        elseif (scale == 5) then
+          myo.mouse("left", "click", "shift", "alt");
+        elseif (scale == 6) then
+          myo.mouse("left", "click", "control", "alt");
         end
      end
 
