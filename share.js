@@ -19,7 +19,7 @@ Splash = Class.create({
 RoundSplat = Class.create(Splash, {
   initialize: function($super, data) {
     this.type = "RoundSplat";
-    $super({ coords: data.coords, radius: data.radius });
+    $super(data);
   }
 });
 /* }}} */
