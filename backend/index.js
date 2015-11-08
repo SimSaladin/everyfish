@@ -41,8 +41,8 @@ app.get("/cockroach.png", function(req, res){
 app.get("/fist.cur", function(req, res){
   res.sendFile('frontend/fist.cur', {'root': '../'});
 });
-app.get("/fist.jpg", function(req, res){
-  res.sendFile('frontend/fist.jpg', {'root': '../'});
+app.get("/fist.png", function(req, res){
+  res.sendFile('frontend/fist.png', {'root': '../'});
 });
 app.get("/share.js", function(req, res){
   res.sendFile('share.js', {'root': '../'});
