@@ -18,18 +18,18 @@ Splash = Class.create({
 
 /* {{{ Round Splat */
 RoundSplat = Class.create(Splash, {
-  initialize: function($super, coords) {
+  initialize: function($super, data) {
     this.type = "RoundSplat";
-    $super({ coords: coords });
+    $super({ coords: data.coords, radius: data.radius });
   }
 });
 /* }}} */
 
 /* {{{ Bezier Splat */
 BezierSplat = Class.create(Splash, {
-  initialize: function($super, coords) {
+  initialize: function($super, data) {
     this.type = "BezierSplat";
-    $super({ coords: coords });
+    $super({ coords: data.coords, radius: data.radius });
   }
 });
 /* }}} */

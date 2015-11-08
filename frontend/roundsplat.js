@@ -1,5 +1,5 @@
 
-function getRoundSplat(centerX, centerY, color, seed) {
+function getRoundSplat(centerX, centerY, color, seed, size) {
   var curve = new createjs.Shape();
   curve.graphics.beginStroke(color);
   curve.graphics.beginFill(color);
@@ -8,8 +8,8 @@ function getRoundSplat(centerX, centerY, color, seed) {
   var noise = new Simple1DNoise(Math.seed(seed));
 
 
-  noise.setAmplitude(25);          // spike variation measure
-  var baseCircleRadius = 25;  // minimum radius 
+  noise.setAmplitude(size);          // spike variation measure
+  var baseCircleRadius = size;  // minimum radius 
   var spikeMultiplier = 5;  // larger value creates spikes with higher probability
   var sharpnessScale = 1.0 / 7; // spike length multiplier
   var resolution = 100; // number of line segments

@@ -162,13 +162,14 @@ function startGame(c){
     switch(json.type) {
 
       case "BezierSplat":
-        splash = new BezierSplat(json.data.coords);
-        shape = splat.createDefaultBezier(json.data.color, json.data.coords);
+        splash = new BezierSplat({ coords: json.data.coords, radius: json.data.radius });
+        shape = splat.createBezier(json.data.color, json.data.coords, json.data.radius);
         break;
 
       case "RoundSplat":
-        splash = new RoundSplat(json.data.coords);
-        shape = splat.createDefaultRound(json.data.color, json.data.coords, json.data.seed);
+        splash = new RoundSplat({ coords: json.data.coords, radius: json.data.radius });
+        shape = splat.createRound(json.data.color, json.data.coords, json.data.seed,
+              json.data.radius);
         break;
     }
 
@@ -187,9 +188,9 @@ function startGame(c){
   });
 
   // Click listeners
-  canvas.on("click", function(e){ canvasClick(stage, e); });
+  canvas.on("click", function(e){ canvasEvent(stage, e); });
   // right click, disable contextmenu, do a click instead
-  canvas.on("contextmenu", function(e){ canvasClick(stage, e); return false });
+  canvas.on("contextmenu", function(e){ canvasEvent(stage, e); return false });
   
   stage.update();
 }
@@ -254,19 +255,34 @@ function endGame(){
 /* {{{ Input */
 
 // Build the shape based on the kind of the click
-function canvasClick(stage, event) {
+function canvasEvent(stage, event) {
     var coords = getCanvasCoords(event); 
 
     hits = checkHits(coords);
-    if (hits.length == 0) return false;
+    // if (hits.length == 0) return false;
 
     var splatGenerator;
     switch (event.type) {
        case "click":
-          splatGenerator = function() { return new RoundSplat(coords); };
+          var alt = 0, shift = 0, ctrl = 0;
+          alt = event.altKey ? 1 : 0;
+          shift = event.shiftKey ? 1 : 0;
+          ctrl = event.ctrlKey ? 1 : 0;
+
+          var value = (alt << 2 | shift << 1 | ctrl) + 1; 
+          if (value < 3) {
+             // bezier
+             splatGenerator = function() { return new BezierSplat(
+                   { coords: coords, radius: value * 30 }) };
+             console.log("bezier");
+          } else {
+             splatGenerator = function() { return new RoundSplat(
+                   { coords: coords, radius: 15 + 2 * value }) };
+             console.log("round");
+          }
+       
           break;
        case "contextmenu":
-          splatGenerator = function() { return new BezierSplat(coords) };
           break;
     }
 
