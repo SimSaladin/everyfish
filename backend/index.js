@@ -96,6 +96,10 @@ function startGame(socket, color){
 
   socket.emit('start', color);
 
+  // manual spawn to speed up the start
+  roachId = nextUnicId();
+  roaches.push(roachId);
+  spawnRoach();
 }
 
 function nextUnicId() {
@@ -103,7 +107,31 @@ function nextUnicId() {
   return curUnic;
 }
 
+function spawnRoach(roachId) {
+  if (Math.random() <= 0.5 && roachesPerPlayer[0] < roachPerPlayer) {
+    oneOrTwo = 1;
+    roachesPerPlayer[0] += 1;
+  } else if (roachesPerPlayer[1] < roachPerPlayer) {
+    oneOrTwo = 2;
+    roachesPerPlayer[1] += 1;
+  }
+
+  console.log(oneOrTwo, roachesPerPlayer);
+  if(oneOrTwo == 1) {
+    roachPos = [5, Math.random() * CANVAS_HEIGHT];
+    roachAngle = Math.random() * 180 + 180;
+  } else {
+    roachPos = [CANVAS_WIDTH - 5, Math.random() * CANVAS_HEIGHT];
+    roachAngle = Math.random() * 180;
+  }
+
+  roachSeed = Math.random() * 2*Math.PI;
+
+  io.sockets.emit('roach', {x : roachPos[0], y : roachPos[1], seed : roachSeed, angle : roachAngle, player : oneOrTwo, id : roachId});
+}
+
 function updateGame() {
+  var roachId
   // create roach pos & seed here
   roachCreated = Math.random () < roachDensity;
   roachCapacityReached = roaches.length >= 2 * roachPerPlayer;
@@ -123,29 +151,7 @@ function updateGame() {
     intervalid = null;
   }
 
-  if (roachCreated) {
-
-    if (Math.random() <= 0.5 && roachesPerPlayer[0] < roachPerPlayer) {
-      oneOrTwo = 1;
-      roachesPerPlayer[0] += 1;
-    } else if (roachesPerPlayer[1] < roachPerPlayer) {
-      oneOrTwo = 2;
-      roachesPerPlayer[1] += 1;
-    }
-
-    console.log(oneOrTwo, roachesPerPlayer);
-    if(oneOrTwo == 1) {
-      roachPos = [5, Math.random() * CANVAS_HEIGHT];
-      roachAngle = Math.random() * 180 + 180;
-    } else {
-      roachPos = [CANVAS_WIDTH - 5, Math.random() * CANVAS_HEIGHT];
-      roachAngle = Math.random() * 180;
-    }
-
-    roachSeed = Math.random() * 2*Math.PI;
-  
-    io.sockets.emit('roach', {x : roachPos[0], y : roachPos[1], seed : roachSeed, angle : roachAngle, player : oneOrTwo, id : roachId});
-  }
+  if (roachCreated) spawnRoach(roachId);
 
 }
 
