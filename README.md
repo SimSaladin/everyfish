@@ -25,3 +25,4 @@ because it is rather stupid
 - pointer lock or other features for miss clicks and UX?
 - Background image - or will it be too confusing/dirty?
 - Set up running somewhere. Domain?
+- New splats end up below old splats
