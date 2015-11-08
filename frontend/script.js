@@ -135,7 +135,6 @@ function initialize() {
 
   console.log("ready");
 
-  canvasDom.requestPointerLock();
 
   socket.on("connect", function (s) {
     console.log("socket.io connected");
@@ -388,10 +387,11 @@ function canvasEvent(stage, event) {
      case "mousedown":
         mouse.isDown = true;
      case "mouseup":
-        //mouse.isDown = false;
+        mouse.isDown = false;
     }
 
     if (event.type == "click" || mouse.isDown);
+    canvasDom.requestPointerLock();
 
     var hits = checkHits(mouse);
     if (hits.length == 0) return false;
