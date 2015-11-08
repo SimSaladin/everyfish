@@ -20,7 +20,7 @@ because it is rather stupid
 - Map myo to different splats
   - do we need a custom driver for myo?
   - use velocity
-- A "crusher hand" cursor
+- ~~A "crusher hand" cursor~~
 - pointer lock or other features for miss clicks and UX?
 - Background image - or will it be too confusing/dirty?
 - Set up running somewhere. Domain?

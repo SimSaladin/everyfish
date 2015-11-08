@@ -38,6 +38,9 @@ app.get("/cockroach.js", function(req, res){
 app.get("/cockroach.png", function(req, res){
   res.sendFile('frontend/cockroach.png', {'root': '../'});
 });
+app.get("/fist.cur", function(req, res){
+  res.sendFile('frontend/fist.cur', {'root': '../'});
+});
 app.get("/share.js", function(req, res){
   res.sendFile('share.js', {'root': '../'});
 });
